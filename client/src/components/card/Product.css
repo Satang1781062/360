@@ -1,0 +1,6 @@
+.product-card {
+    width: 100%;
+    max-width: 250px; /* ความกว้างสูงสุด */
+    margin: auto; /* จัดให้กลาง */
+  }
+  

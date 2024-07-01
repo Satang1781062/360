@@ -1,0 +1,59 @@
+Navbar.css
+.ant-menu-horizontal {
+    background-color: #48945b8e ; 
+    color: #ffffff;
+  }
+  
+  .ant-menu-item,
+  .ant-menu-submenu-title {
+    color: #ffffff; 
+  }
+  
+  .ant-menu-item:hover,
+  .ant-menu-submenu-title:hover {
+    background-color: #195a19; 
+  }
+
+
+  .navbar {
+    margin-bottom: 20px;
+  }
+  
+  .navbar-brand, .nav-link, .nav-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-link {
+    padding: 0.5rem 1rem;
+  }
+  
+  .nav-link:hover {
+    background-color: #555;
+    color: white;
+  }
+  
+  .badge {
+    background-color: #dc3545;
+    color: white;
+  }
+
+
+  .custom-navbar {
+    background-color: #48945b8e; 
+    /* background-color: #f183ba; สีที่คุณต้องการ */
+  }
+  
+  .custom-navbar .navbar-brand,
+  .custom-navbar .nav-link {
+    color: #ffffff; /* สีของข้อความ */
+  }
+  
+  .custom-navbar .nav-link:hover {
+    color: #f0e68c; /* สีของข้อความเมื่อ hover */
+  }
+
+  .user-dropdown {
+    margin-right: 20px; /* หรือปรับค่าอื่นตามต้องการ */
+  }
+  

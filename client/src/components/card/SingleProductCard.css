@@ -1,0 +1,21 @@
+.single-product-container {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+
+  .custom-card-column {
+  margin-top: 10px;
+  /* margin-right: auto; */
+}
+  
+  @media (max-width: 768px) {
+    .single-product-container {
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+  
+    .col-md-6 {
+      margin-bottom: 20px;
+    }
+  }
+  

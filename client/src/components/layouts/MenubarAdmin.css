@@ -1,0 +1,28 @@
+.navAdmin {
+  background-color: #e1f8cd33; /* สีพื้นหลังสีเทา */
+  height: 100%; /* ให้เมนูทั้งส่วนสูง */ /* ให้เมนูทั้งส่วนสูง */
+  padding-top: 20px; /* ระยะห่างด้านบนของเมนู */
+  /* background-color: #f809f813; */
+}
+
+
+.navAdmin ul {
+  list-style-type: none; /* ลบรูปเล่มรายการ */
+  padding: 0;
+}
+
+.navAdmin li {
+  margin-bottom: 10px; /* ระยะห่างระหว่างรายการ */
+}
+
+.navAdmin .nav-item a {
+  display: block;
+  padding: 10px 20px;
+  color: #525252; /* สีของตัวหนังสือเมื่อไม่ได้ชี้ */
+  text-decoration: none;
+}
+
+.navAdmin .nav-item a:hover {
+  background-color: #73ca73; /* สีพื้นหลังเมื่อชี้ */
+  color: #ffffff; /* สีของตัวหนังสือเมื่อชี้ */
+}
