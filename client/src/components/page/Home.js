@@ -1,17 +1,17 @@
 import React from "react";
 import NewProduct from "../home/NewProduct";
 import BestSeller from "../home/BestSeller";
-import { Carousel, Row, Col } from 'react-bootstrap';
-import ReactTypingEffect from 'react-typing-effect';
-import './css/Home.css';
+import { Carousel, Row, Col } from "react-bootstrap";
+import ReactTypingEffect from "react-typing-effect";
+import "./css/Home.css";
 
-import firstSlideImage from './images/1.png';
-import secondSlideImage from './images/2.png';
-import thirdSlideImage from './images/3.png';
-import fourthSlideImage from './images/4.png';
-import fifthSlideImage from './images/5.png';
-import lineImage from './image/line.png';
-import logo from './auth/logo/logo.png'; // ใส่ path ของโลโก้ที่นี่
+import firstSlideImage from "./images/1.png";
+import secondSlideImage from "./images/2.png";
+import thirdSlideImage from "./images/3.png";
+import fourthSlideImage from "./images/4.png";
+import fifthSlideImage from "./images/5.png";
+import lineImage from "./image/line.png";
+import logo from "./auth/logo/logo.png"; // ใส่ path ของโลโก้ที่นี่
 import Footer from "../layouts/Footer";
 
 const Home = () => {
@@ -25,8 +25,8 @@ const Home = () => {
             className="img-fluid mb-3 mb-md-0"
             style={{ maxWidth: "300px" }}
           />
-          <div className="ml-md-4 "  style={{ maxWidth: "500px" }}>
-          <ReactTypingEffect
+          <div className="ml-md-4 " style={{ maxWidth: "500px" }}>
+            <ReactTypingEffect
               text={["360 healthyshop จำหน่ายผลิตภัณฑ์เพื่อสุขภาพ"]}
               speed={100}
               eraseSpeed={50}
@@ -37,7 +37,12 @@ const Home = () => {
             <br />
             <br />
             <p style={{ textAlign: "justify" }}>
-              360healthyshop จำหน่ายผลิตภัณฑ์เพื่อสุขภาพผลิตภัณฑ์ที่ช่วยปรับสมดุลร่างกายทางกายภาพ เคล็ดลับการมีสุขภาพที่ดี ความปลอดภัยต่อผู้บริโภคเป็นสิ่งสำคัญ เราเลือกผลิตภัณฑ์ทุกชิ้นมีการผ่านการรับรองจากองค์กรอาหารและยา (อย.) และได้รับรับรองมาตราฐาน GMP เพื่อตอบโจทย์ปัญหาได้ตรงจุดและเข้าถึงผู้บริโภคมากที่สุด
+              360healthyshop
+              จำหน่ายผลิตภัณฑ์เพื่อสุขภาพผลิตภัณฑ์ที่ช่วยปรับสมดุลร่างกายทางกายภาพ
+              เคล็ดลับการมีสุขภาพที่ดี ความปลอดภัยต่อผู้บริโภคเป็นสิ่งสำคัญ
+              เราเลือกผลิตภัณฑ์ทุกชิ้นมีการผ่านการรับรองจากองค์กรอาหารและยา
+              (อย.) และได้รับรับรองมาตราฐาน GMP
+              เพื่อตอบโจทย์ปัญหาได้ตรงจุดและเข้าถึงผู้บริโภคมากที่สุด
             </p>
           </div>
         </div>
@@ -57,25 +62,25 @@ const Home = () => {
       </div>
 
       {/* YouTube video */}
-      <div className="row">
-        <div className="text-center p-3 mt-5 mb-4 custom-heading">
-          <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/2F24ztMGPjE?si=jXAg5RehB5NXykEc"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          ></iframe>
+      <div className="row mt-5">
+        <div className="col-12 d-flex justify-content-center align-items-center">
+          <div className="embed-responsive embed-responsive-16by9">
+            <iframe
+              width="560"
+              height="315"
+              className="embed-responsive-item"
+              src="https://www.youtube.com/embed/2F24ztMGPjE?si=jXAg5RehB5NXykEc"
+              title="YouTube video player"
+              allowFullScreen
+            ></iframe>
+          </div>
         </div>
       </div>
 
       <div className="container mt-5">
         <div>
           <div className="text-center p-2 mt-5 mb-4 custom-heading">
-            รีวิวจากผู้ใช้
+            รีวิวจากผู้ใช้งาน
           </div>
         </div>
 
@@ -133,9 +138,7 @@ const Home = () => {
                 />
               </Col>
             </Row>
-            <Carousel.Caption>
-              
-            </Carousel.Caption>
+            <Carousel.Caption></Carousel.Caption>
           </Carousel.Item>
         </Carousel>
       </div>
@@ -163,7 +166,7 @@ const Home = () => {
           </a>
         </div>
       </footer> */}
-      <Footer/>
+      <Footer />
     </div>
   );
 };
