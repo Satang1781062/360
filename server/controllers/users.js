@@ -219,13 +219,17 @@ exports.saveOrder = async (req, res) => {
 exports.getOrder= async (req, res) => {
   try {
     const user = await User.findOne({ username: req.user.username }).exec();
-    
 
     let order = await Order.find({ orderdBy: user._id })
       .populate('products.product')
       .exec();
 
-  
+    // กรองสินค้าที่ถูกลบออกไป
+    order = order.map(o => {
+      o.products = o.products.filter(p => p.product !== null);
+      return o;
+    });
+
     res.json(order)
   } catch (err) {
     console.log(err);

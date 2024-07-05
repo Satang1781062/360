@@ -70,7 +70,7 @@ const CreateProduct = () => {
         <div className="col-md-2">
           <MenubarAdmin />
         </div>
-        <div className="col">
+        <div className="col-md-8">
           {loadding
           ?<h1>Loading...<Spin /></h1>
           :<h1>Create Product</h1>

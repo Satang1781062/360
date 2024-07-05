@@ -5,13 +5,13 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { Avatar, Badge } from "antd";
 
-const FileUpload = ({ values, setValues }) => {
+const FileUpload = ({ images, setImages }) => {
   const { user } = useSelector((state) => ({ ...state }));
 
   const handleChangFile = (e) => {
     const files = e.target.files;
     if (files) {
-      let allfileUpload = values.images;
+      let allfileUpload = [...images];
       for (let i = 0; i < files.length; i++) {
         Resizer.imageFileResizer(
           files[i],
@@ -29,7 +29,7 @@ const FileUpload = ({ values, setValues }) => {
               )
               .then((res) => {
                 allfileUpload.push(res.data);
-                setValues({ images: allfileUpload });
+                setImages(allfileUpload);
                 toast.success("Image uploaded successfully");
               })
               .catch((err) => {
@@ -46,7 +46,6 @@ const FileUpload = ({ values, setValues }) => {
   };
 
   const handleRemove = (public_id) => {
-    const { images } = values;
     axios
       .post(
         process.env.REACT_APP_API + "/removebill",
@@ -54,32 +53,36 @@ const FileUpload = ({ values, setValues }) => {
         { headers: { authtoken: user.token } }
       )
       .then((res) => {
-        let filterImages = images.filter((item) => item.public_id !== public_id);
-        setValues({ images: filterImages });
+        const filteredImages = images.filter((item) => item.public_id !== public_id);
+        setImages(filteredImages);
+        toast.success("Image removed successfully");
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Failed to remove image");
       });
   };
 
   return (
     <>
       <br />
-      {values.images &&
-        values.images.map((item) => (
-          <span className="avatar-item" key={item.public_id}>
-            <Badge
-              onClick={() => handleRemove(item.public_id)}
-              style={{ cursor: "pointer" }}
-              count="x"
-            >
-              <Avatar className="m-3" src={item.url} shape="square" size={120} />
-            </Badge>
-          </span>
-        ))}
+      {images.map((item) => (
+        <span className="avatar-item" key={item.public_id}>
+          <Badge
+            onClick={() => handleRemove(item.public_id)}
+            style={{ cursor: "pointer" }}
+            count="x"
+          >
+            <Avatar className="m-3" src={item.url} shape="square" size={120} />
+          </Badge>
+        </span>
+      ))}
       <hr />
       <div className="form-group">
-        <label className="btn btn-primary">
+        <label className="btn btn-primary"style={{
+                backgroundColor: "rgb(233, 57, 139)",
+                borderColor: "rgb(233, 57, 139)",
+              }}>
           Choose File
           <input
             onChange={handleChangFile}

@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from "react";
 import MenubarAdmin from "../../layouts/MenubarAdmin";
 import { useSelector } from "react-redux";
-
-//function
 import { getOrdersAdmin, updateStatusOrder } from "../../function/admin";
 import { toast } from "react-toastify";
-
-import { Tabs, Table } from "antd";
-
+import { Tabs, Table, Modal, Button, Image, StyleSheet } from "antd";
 import Invoice from "./Invoice";
-
-
-
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  PDFDownloadLink,
-} from "@react-pdf/renderer";
 import InvoiceBill from "./InvoiceBill";
+import Popup from "./Popup";
+import { Document, Page, View, StyleSheet as PDFStyleSheet, PDFDownloadLink } from "@react-pdf/renderer";
+
 const { TabPane } = Tabs;
 
 const Orders = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [orders, setOrders] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const handleOpenPopup = (order) => {
+    setSelectedOrder(order);
+    setVisible(true);
+  };
+
+  const handleClosePopup = () => {
+    setVisible(false);
+  };
 
   useEffect(() => {
-    //code
     loadData();
   }, []);
 
@@ -37,18 +35,17 @@ const Orders = () => {
       setOrders(res.data);
     });
   };
-  console.log(orders);
 
   const handleChangeStatus = (orderId, orderstatus) => {
     updateStatusOrder(user.token, orderId, orderstatus).then((res) => {
-      console.log(res.data);
       toast.info("Updated " + res.data.orderstatus + " Success");
       loadData();
     });
   };
+
   const orderCard = orders.map((item, index) => {
     return (
-      <div key={index} className="card mb-3">
+      <div key={item._id} className="card mb-3">
         <div className="card-body">
           <h5 className="card-title">
             Order by <b>{item.orderdBy?.username}</b>
@@ -89,7 +86,7 @@ const Orders = () => {
             </thead>
             <tbody>
               {item.products.map((p, i) => (
-                <tr key={i}>
+                <tr key={p.product._id}>
                   <td>{p.product.title}</td>
                   <td>{p.price}</td>
                   <td>{p.count}</td>
@@ -103,25 +100,17 @@ const Orders = () => {
             </tbody>
           </table>
           <div className="mt-3">
-            <PDFDownloadLink
-              document={<InvoiceBill order={item} />}
-              fileName="invoice_with_image.pdf"
-            >
-              {({ blob, url, loading, error }) =>
-                loading ? "Loading document..." : "Download Invoice with Image"
-              }
-            </PDFDownloadLink>
+            <Button onClick={() => handleOpenPopup(item)}>View Invoice with Image</Button>
           </div>
           <div className="mt-3">
             <PDFDownloadLink
               document={<Invoice order={item} />}
               fileName={`invoice_${item._id}.pdf`}
             >
-              {({ blob, url, loading, error }) =>
+              {({ loading }) =>
                 loading ? "Loading PDF..." : "Download Invoice"
               }
             </PDFDownloadLink>
-            {/* <FundViewOutlined /> */}
           </div>
         </div>
       </div>
@@ -139,7 +128,7 @@ const Orders = () => {
       render: (item, i) => (
         <ol>
           {item.products.map((p, i) => (
-            <li key={i}>
+            <li key={p.product._id}>
               {p.product.title}{" "}
               <b>
                 {p.price}x{p.count}
@@ -162,14 +151,7 @@ const Orders = () => {
     {
       title: "หลักฐานการชำระเงิน",
       render: (item) => (
-        <PDFDownloadLink
-          document={<InvoiceBill order={item} />}
-          fileName="invoice_with_image.pdf"
-        >
-          {({ blob, url, loading, error }) =>
-            loading ? "Loading document..." : "Download Invoice"
-          }
-        </PDFDownloadLink>
+        <Button onClick={() => handleOpenPopup(item)}>View</Button>
       ),
     },
     {
@@ -179,8 +161,8 @@ const Orders = () => {
           document={<Invoice order={item} />}
           fileName={`invoice_${item._id}.pdf`}
         >
-          {({ blob, url, loading, error }) =>
-            loading ? "Loading PDF..." : "Download Invoice"
+          {({ loading }) =>
+            loading ? "Loading PDF..." : "Download Address"
           }
         </PDFDownloadLink>
       ),
@@ -228,17 +210,16 @@ const Orders = () => {
           <th scope="col">หลักฐานการชำระเงิน</th>
           <th scope="col">ที่อยู่จัดส่ง</th>
           <th scope="col">อัพเดทสถานะ</th>
-          
         </tr>
       </thead>
       <tbody>
         {orders.map((item, i) => (
-          <tr key={i}>
+          <tr key={item._id}>
             <th scope="row">{item.orderdBy?.username}</th>
             <td>
               <ol>
-                {item.products?.map((p, j) => (
-                  <li key={j}>
+                {item.products.map((p, i) => (
+                  <li key={p.product._id}>
                     {p.product.title}{" "}
                     <b>
                       {p.price}x{p.count}
@@ -250,23 +231,14 @@ const Orders = () => {
             <td>{item.cartTotal}</td>
             <td>{item.orderstatus}</td>
             <td>
-              <PDFDownloadLink
-                document={<InvoiceBill order={item} />}
-                fileName="invoice_with_image.pdf"
-              >
-                {({ blob, url, loading, error }) =>
-                  loading
-                    ? "Loading document..."
-                    : "money transfer slip"
-                }
-              </PDFDownloadLink>
+              <Button onClick={() => handleOpenPopup(item)}>View</Button>
             </td>
             <td>
               <PDFDownloadLink
                 document={<Invoice order={item} />}
                 fileName={`invoice_${item._id}.pdf`}
               >
-                {({ blob, url, loading, error }) =>
+                {({ loading }) =>
                   loading ? "Loading PDF..." : "Download Address"
                 }
               </PDFDownloadLink>
@@ -298,7 +270,6 @@ const Orders = () => {
                 </option>
               </select>
             </td>
-            
           </tr>
         ))}
       </tbody>
@@ -320,17 +291,23 @@ const Orders = () => {
             </TabPane>
 
             <TabPane tab="Tab 2" key="2">
-              Table Atnd
+              Table Ant Design
               <Table dataSource={orders} columns={columns} />
             </TabPane>
 
             <TabPane tab="Tab 3" key="3">
-              Table Boostrap
+              Table Bootstrap
               {tableBoot}
             </TabPane>
           </Tabs>
         </div>
       </div>
+
+      <Popup
+        visible={visible}
+        onClose={handleClosePopup}
+        order={selectedOrder}
+      />
     </div>
   );
 };

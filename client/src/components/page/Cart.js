@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import ProductTableInCart from "../card/ProductTableInCart";
 import { useNavigate } from "react-router-dom";
 
-import { ToastContainer, toast } from 'react-toastify';
-import Alert from 'react-bootstrap/Alert';
+import { ToastContainer, toast } from "react-toastify";
+import Alert from "react-bootstrap/Alert";
 
 //function
 import { userCart } from "../function/users";
+
+//laoyt
+import Footer from "../layouts/Footer";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -29,7 +32,7 @@ const Cart = () => {
         return;
       }
     }
-    
+
     userCart(user.token, cart)
       .then((res) => {
         console.log(res);
@@ -58,9 +61,21 @@ const Cart = () => {
   );
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-8">
+    <>
+    <div className="container">
+      <div className="row mt-5" style={{
+            boxShadow: "0 0 10px rgba(150, 27, 78, 0.7)",
+            padding: "15px",
+            borderRadius: "5px",
+          }}>
+        <div
+          className="col-md-7"
+          style={{
+            boxShadow: "0 3px 10px rgba(0, 0, 0, 0.10)",
+            padding: "15px",
+            borderRadius: "5px",
+          }}
+        >
           <h5>Cart {cart.length} product</h5>
           {!cart.length ? <p>No Product in Cart</p> : showCartItem()}
         </div>
@@ -93,6 +108,10 @@ const Cart = () => {
         </div>
       </div>
     </div>
+
+    <Footer/>
+
+    </>
   );
 };
 

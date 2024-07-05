@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from 'antd';
 import { EyeOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import _ from 'lodash';
-import './Product.css'
+import './Product.css';
 
 const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const [isHovered, setIsHovered] = useState(false);
 
   const { _id, title, description, images } = product;
 
@@ -37,7 +38,6 @@ const ProductCard = ({ product }) => {
 
   const shortenedDescription = description.slice(0, 20);
 
-
   return (
     <Card
       hoverable
@@ -56,8 +56,14 @@ const ProductCard = ({ product }) => {
         </Link>,
         <ShoppingCartOutlined onClick={handleAddToCart} className='text-danger' />
       ]}
+      style={{
+        boxShadow: isHovered ? '0 4px 8px rgba(150, 27, 78, 0.7)' : '0 4px 8px rgba(0, 0, 0, 0.1)',
+        transition: 'box-shadow 0.3s ease-in-out'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-       <Meta title={title} description={shortenedDescription} /> {/* ใช้คำอธิบายที่ถูกตัดแล้ว */}
+      <Meta title={title} description={shortenedDescription} /> {/* ใช้คำอธิบายที่ถูกตัดแล้ว */}
     </Card>
   );
 };

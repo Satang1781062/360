@@ -9,9 +9,13 @@ import {
   LogoutOutlined,
   ShoppingCartOutlined,
   ShoppingOutlined,
+  ScheduleOutlined,
+  GiftOutlined,
 } from "@ant-design/icons";
 import Search from "../card/Search";
 import "./Navbar.css";
+
+import logo from "./img/logo192.png";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -28,21 +32,49 @@ const NavBar = () => {
 
   return (
     <Navbar className="custom-navbar" expand="lg">
-      <Navbar.Brand as={Link} to="/">
-        <HomeOutlined /> Home
+      <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+        <Link to="/">
+          <img
+            src={logo}
+            alt="Logo"
+            style={{
+              width: "40px",
+              height: "40px",
+              marginRight: "10px",
+              marginLeft: "40px",
+            }}
+          />
+        </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/shop">
-            <ShoppingOutlined /> Shop
+        <Nav className="mr-auto d-flex w-50">
+          <Nav.Link as={Link} to="/" className="flex-fill text-center">
+            <HomeOutlined /> หน้าแรก
           </Nav.Link>
-          <Nav.Link as={Link} to="/cart">
-            <ShoppingCartOutlined /> 
+          <Nav.Link as={Link} to="/shop" className="flex-fill text-center">
+            <ShoppingOutlined /> ร้านค้า
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            to="/promotions"
+            className="flex-fill text-center"
+          >
+            <GiftOutlined /> โปรโมชั่น
+          </Nav.Link>
+          <Nav.Link
+            as={Link}
+            to="/user/order-tracking"
+            className="flex-fill text-center"
+          >
+            <ScheduleOutlined /> ติดตามคำสั่งซื้อ
+          </Nav.Link>
+          <Nav.Link as={Link} to="/cart" className="flex-fill text-center">
+            <ShoppingCartOutlined />
             <Badge pill bg="secondary" className="ms-1">
               {cart.length}
-            </Badge> 
-            Cart
+            </Badge>
+            ตะกร้าสินค้า
           </Nav.Link>
         </Nav>
         <Nav className="ms-auto">
@@ -50,8 +82,15 @@ const NavBar = () => {
             <Search />
           </span>
           {user ? (
-            <NavDropdown title={user.username} id="basic-nav-dropdown" className="user-dropdown">
-              <NavDropdown.Item as={Link} to={user.role === "admin" ? "/admin/index" : "/user/index"}>
+            <NavDropdown
+              title={user.username}
+              id="basic-nav-dropdown"
+              className="user-dropdown"
+            >
+              <NavDropdown.Item
+                as={Link}
+                to={user.role === "admin" ? "/admin/index" : "/user/index"}
+              >
                 Dashboard
               </NavDropdown.Item>
               <NavDropdown.Item onClick={logout}>
@@ -60,10 +99,14 @@ const NavBar = () => {
             </NavDropdown>
           ) : (
             <>
-              <Nav.Link as={Link} to="/login">
+              <Nav.Link as={Link} to="/login" className="flex-fill text-center">
                 <LoginOutlined /> Login
               </Nav.Link>
-              <Nav.Link as={Link} to="/register">
+              <Nav.Link
+                as={Link}
+                to="/register"
+                className="flex-fill text-center"
+              >
                 <UserAddOutlined /> Register
               </Nav.Link>
             </>

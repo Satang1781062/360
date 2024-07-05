@@ -24,10 +24,13 @@ const Search = () => {
   //
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input 
-      onChange={handleChange}
-      type="search" className="form-control" />
+    <form onSubmit={handleSubmit} className="search-form">
+      <input
+        onChange={handleChange}
+        type="search"
+        className="form-control search-input"
+        value={text}
+      />
     </form>
   );
 };

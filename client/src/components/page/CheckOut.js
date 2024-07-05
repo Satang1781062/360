@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FileUpload from "./FileUpload"; // Import FileUpload
+import Footer from "../layouts/Footer";
 
 const CheckOut = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -55,7 +56,8 @@ const CheckOut = () => {
   };
 
   const handleCreateOrder = () => {
-    saveOrder(user.token, images).then((res) => { // Pass images to saveOrder
+    saveOrder(user.token, images).then((res) => {
+      // Pass images to saveOrder
       console.log(res.data);
       // clear DB
       emptyCart(user.token);
@@ -67,85 +69,116 @@ const CheckOut = () => {
       // localstorage
       if (typeof window !== "undefined") localStorage.removeItem("cart");
       toast.success("Save Order Success");
-      navigate('/user/history')
+      navigate("/user/history");
     });
   };
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-6">
-          <h5>Address</h5>
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your full name"
-            />
+    <>
+      <div className="container">
+        <div
+          className="row mt-5 mb-5"
+          style={{
+            boxShadow: "0 3px 5px rgba(150, 27, 78, 0.7)",
+            padding: "15px",
+            borderRadius: "5px",
+          }}
+        >
+          <div className="col-md-6">
+            <h5>Address</h5>
+            <div className="form-group">
+              <label>Name</label>
+              <input
+                type="text"
+                className="form-control"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div className="form-group">
+              <label>Phone</label>
+              <input
+                type="text"
+                className="form-control"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Enter your phone number"
+              />
+            </div>
+            <div className="form-group">
+              <label>Address</label>
+              <input
+                type="text"
+                className="form-control"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Enter your address"
+              />
+            </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+              />
+            </div>
+            <button
+              className="btn btn-primary m-2"
+              onClick={handleSaveAddress}
+              style={{
+                backgroundColor: "rgb(233, 57, 139)",
+                borderColor: "rgb(233, 57, 139)",
+              }}
+            >
+              Save Address
+            </button>
           </div>
-          <div className="form-group">
-            <label>Phone</label>
-            <input
-              type="text"
-              className="form-control"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Enter your phone number"
-            />
-          </div>
-          <div className="form-group">
-            <label>Address</label>
-            <input
-              type="text"
-              className="form-control"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Enter your address"
-            />
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-            />
-          </div>
-          <button className="btn btn-primary m-2" onClick={handleSaveAddress}>
-            Save Address
-          </button>
-        </div>
-        <div className="col-md-6">
-          <h5>Order Summary</h5>
-          <hr />
-          <p>Product {products.length}</p>
-          <hr />
-          <ul>
-            {products.map((item, i) => (
-              <li key={i}>
-                {item.product.title} x {item.count} = ${item.price * item.count}
-              </li>
-            ))}
-          </ul>
-          <hr />
-          Total: <b>${total}</b>
-          <br />
-          <FileUpload values={{ images }} setValues={({ images }) => setImages(images)} /> {/* Add FileUpload */}
-          <button
-            onClick={handleCreateOrder}
-            disabled={!addressSaved || !products.length}
-            className="btn btn-primary"
+          <div
+            className="col-md-6 mb-5"
+            style={{
+              boxShadow: "0 3px 5px rgba(150, 27, 78, 0.7)",
+              padding: "15px",
+              borderRadius: "5px",
+            }}
           >
-            Check Out
-          </button>
+            <h5>Order Summary</h5>
+            <hr />
+            <p>Product {products.length}</p>
+            <hr />
+            <ul>
+              {products.map((item, i) => (
+                <li key={i}>
+                  {item.product.title} x {item.count} = $
+                  {item.price * item.count}
+                </li>
+              ))}
+            </ul>
+            <hr />
+            Total: <b>${total}</b>
+            <hr />
+            <p>
+              อัพโหลดสลีป | หลักฐานการชำระเงิน{" "}
+              <FileUpload images={images} setImages={setImages} />{" "}
+              {/* Add FileUpload */}
+            </p>
+            <div className="row">
+              <button
+                onClick={handleCreateOrder}
+                disabled={!addressSaved || !products.length}
+                className="btn btn-success"
+              >
+                Check Out
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

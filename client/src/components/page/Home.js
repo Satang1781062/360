@@ -1,8 +1,9 @@
 import React from "react";
 import NewProduct from "../home/NewProduct";
 import BestSeller from "../home/BestSeller";
-import { Carousel, Row, Col } from "react-bootstrap";
+import { Carousel, Row, Col, Button } from "react-bootstrap";
 import ReactTypingEffect from "react-typing-effect";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import "./css/Home.css";
 
 import firstSlideImage from "./images/1.png";
@@ -15,17 +16,23 @@ import logo from "./auth/logo/logo.png"; // ใส่ path ของโลโก
 import Footer from "../layouts/Footer";
 
 const Home = () => {
+  const navigate = useNavigate(); // ใช้ useNavigate เพื่อการนำทาง
+
+  const handleButtonClick = () => {
+    navigate('/contact-shop'); // นำทางไปยัง component1 เมื่อคลิกปุ่ม
+  };
+
   return (
-    <div>
+    <div >
       <div className="row justify-content-center align-items-center mb-4">
-        <div className="col-5 mt-5 d-flex flex-column flex-md-row align-items-center text-center text-md-left">
+        <div className="col-10 col-md-5 mt-5 d-flex flex-column flex-md-row align-items-center text-center text-md-left">
           <img
             src={logo}
             alt="Logo"
             className="img-fluid mb-3 mb-md-0"
             style={{ maxWidth: "300px" }}
           />
-          <div className="ml-md-4 " style={{ maxWidth: "500px" }}>
+          <div className=" d-flex flex-column align-items-center justify-content-center" style={{ width: "100%" }}>
             <ReactTypingEffect
               text={["360 healthyshop จำหน่ายผลิตภัณฑ์เพื่อสุขภาพ"]}
               speed={100}
@@ -63,11 +70,9 @@ const Home = () => {
 
       {/* YouTube video */}
       <div className="row mt-5">
-        <div className="col-12 d-flex justify-content-center align-items-center">
-          <div className="embed-responsive embed-responsive-16by9">
+        <div className="col-6 d-flex justify-content-center align-items-center mx-auto mt-5">
+          <div className="ratio ratio-16x9">
             <iframe
-              width="560"
-              height="315"
               className="embed-responsive-item"
               src="https://www.youtube.com/embed/2F24ztMGPjE?si=jXAg5RehB5NXykEc"
               title="YouTube video player"
@@ -75,6 +80,13 @@ const Home = () => {
             ></iframe>
           </div>
         </div>
+      </div>
+      <div className="row">
+      <div className="text-center mt-5">
+        <Button variant="primary" onClick={handleButtonClick}>
+          ช่องทางการสั่งซื้อ
+        </Button>
+      </div>
       </div>
 
       <div className="container mt-5">
@@ -143,29 +155,8 @@ const Home = () => {
         </Carousel>
       </div>
 
-      {/* <footer className="py-4 bg-light text-center mt-5">
-        <p>ช่องทางติดต่อ</p>
-        <div className="d-flex justify-content-center align-items-center">
-          <a
-            href="https://line.me/R/ti/p/@buo6340m"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src={lineImage} alt="Line" className="mx-2" />
-          </a>
-          
-        </div>
-        <div>โทร: 0990439888 l 0989232424</div>
-        <div>
-          <a
-            href="http://www.360healthyshop.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            www.360healthyshop.com
-          </a>
-        </div>
-      </footer> */}
+      
+
       <Footer />
     </div>
   );

@@ -129,12 +129,13 @@ const ManageAdmin = () => {
   };
 
   return (
-    <div className="container">
+    <div>
       <div className="row">
         <div className="col-md-2">
           <MenubarAdmin />
         </div>
-        <div className="col-md-10">
+        
+        <div className="col-md-9 mt-4">
           <div className="Manage">
             <h3>ManageAdmin </h3>
             <select onChange={(e) => handleSelectRole(e)}>

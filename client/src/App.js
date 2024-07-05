@@ -29,6 +29,8 @@ import HomeUser from "./components/page/user/Home";
 import CheckOut from "./components/page/CheckOut";
 import WishList from "./components/page/user/WishList";
 import History from "./components/page/user/History";
+import ContactShop from "./components/page/ContactShop";
+import OederTracking from "./components/page/user/OrderTracking";
 
 //function
 import { currentUser } from "./components/function/auth";
@@ -84,6 +86,7 @@ function App() {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/contact-shop" element={<ContactShop />} />
 
         <Route
           path="/admin/index"
@@ -176,6 +179,14 @@ function App() {
           element={
             <UserRoute>
               <History />
+            </UserRoute>
+          }
+        />
+        <Route
+          path="/user/order-tracking"
+          element={
+            <UserRoute>
+              <OederTracking />
             </UserRoute>
           }
         />

@@ -91,7 +91,7 @@ const FileUpload = ({ values, setValues, loading, setLoading }) => {
       <br />
       {values.images &&
         values.images.map((item) => (
-          <span className="avatar-item">
+          <span className="avatar-item" key={item.public_id}>
             <Badge
               onClick={() => handleRemove(item.public_id)}
               style={{ cursor: "pointer" }}

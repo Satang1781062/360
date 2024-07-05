@@ -2,3 +2,26 @@
     font-size: 2.5rem; /* กำหนดขนาดตามที่คุณต้องการ */
     font-weight: bold; /* เพิ่มความหนาของตัวอักษรถ้าจำเป็น */
   }
+
+  /* .responsive-iframe {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; 
+  }
+  
+  .responsive-iframe iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+  }
+  
+  
+  @media (min-width: 500px) {
+    .responsive-iframe {
+      width: 80%; 
+      margin: 0 auto; 
+    }
+  } */

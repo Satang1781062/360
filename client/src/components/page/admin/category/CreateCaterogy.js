@@ -83,7 +83,7 @@ const CreateCaterogy = () => {
         <div className="col-md-2">
           <MenubarAdmin />
         </div>
-        <div className="col">
+        <div className="col-md-8">
           <h1>Create Category</h1>
           <form onSubmit={handleSummit}>
             <div className="form-group">

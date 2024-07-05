@@ -50,11 +50,11 @@ const Footer = () => {
       <div>โทร: 0990439888 | 0989232424</div>
       <div>
         <a
-          href="http://www.360healthyshop.com"
+          href="https://360-healthyshop.netlify.app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          www.360healthyshop.com
+          https://360-healthyshop.netlify.app
         </a>
       </div>
     </footer>

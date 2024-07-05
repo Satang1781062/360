@@ -40,43 +40,41 @@ const History = () => {
         </div>
 
         <div className="col text-center">
-          <div className="row">
+          <div className="row justify-content-center">
             <h4>History ประวัติการสั่งซื้อ</h4>
-            {/* 1 Loop Order Card */}
-            {orders.map((item, index) => {
-              console.log("item", item);
-              return (
-                <div key={index} className="card m-3">
-                  <p>Order {"" + item.orderstatus}</p>
-
-                  <table className="table table-bordered">
-                    <thead>
-                      <tr>
-                        <td>Title</td>
-                        <td>Price</td>
-                        <td>Count</td>
-                      </tr>
-                    </thead>
-                    {item.products.map((p, i) => (
-                      <tr>
-                        <td>{p.product.title}</td>
-                        <td>{p.price}</td>
-                        <td>{p.count}</td>
-                      </tr>
-                    ))}
-                    <tr>
-                      <td colSpan={3}>
-                        ราคาสุทธิ : <b>{item.cartTotal}</b>
-                      </td>
-                    </tr>
-                  </table>
-
+            {orders.map((item, index) => (
+              <div key={index} className="col-12 mb-4 d-flex justify-content-center">
+                <div className="card w-100" style={{ maxWidth: "1000px" }}>
+                  <p>Order {item.orderstatus}</p>
+                  <div className="table-responsive">
+                    <table className="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Price</th>
+                          <th>Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {item.products.map((p, i) => (
+                          <tr key={i}>
+                            <td>{p.product.title}</td>
+                            <td>{p.price}</td>
+                            <td>{p.count}</td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td colSpan={3}>
+                            ราคาสุทธิ: <b>{item.cartTotal}</b>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                   <div className="row">
                     <div className="col">
                       <PDFDownloadLink
-                        document={
-                          <Invoice order={item}/>
-                        }
+                        document={<Invoice order={item} />}
                         fileName="invoice.pdf"
                         className="btn btn-primary m-1"
                       >
@@ -84,15 +82,14 @@ const History = () => {
                       </PDFDownloadLink>
                     </div>
                   </div>
-
                   <div className="row">
                     <div className="col">
-                      <InvoiceJsPDF order={item}/>
+                      <InvoiceJsPDF order={item} />
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
       </div>
