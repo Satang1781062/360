@@ -13,7 +13,7 @@ router.get('/product/:count', list);
  * @swagger
  * /api/product/{count}:
  *   get:
- *     summary: ดึงรายการสินค้าตามจำนวนที่ระบุ
+ *     summary: ดึงรายการสินค้า
  *     tags: [Products]
  *     parameters:
  *       - in: path
