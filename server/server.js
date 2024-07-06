@@ -8,8 +8,18 @@ require('dotenv').config();
 const { readdirSync } = require('fs')
 const connectDB = require('./config/db')
 
+
+const {swaggerUi, swaggerSpec} =require('./config/swaggerConfig')
+
+
+
+
+
+
 const app = express()
 
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 //ConnectDB
 connectDB()
 

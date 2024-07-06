@@ -1,15 +1,16 @@
 const { query } = require("express");
 const Product = require("../models/Product");
 
+
 exports.create = async (req, res) => {
   try {
     console.log(req.body);
-    // const { name } = req.body;
+   
     const product = await new Product(req.body).save();
 
-    res.send(product); // ส่งการตอบกลับหลังจากดำเนินการเสร็จสิ้น
+    res.send(product); 
   } catch (err) {
-    res.status(500).send("Create Product  Error!!"); // ส่งการตอบกลับเมื่อเกิดข้อผิดพลาด
+    res.status(500).send("Create Product  Error!!"); 
   }
 };
 exports.list = async (req, res) => {
@@ -23,9 +24,9 @@ exports.list = async (req, res) => {
       .populate("category")
       .sort([["create", "desc"]]);
 
-    res.send(product); // ส่งการตอบกลับหลังจากดำเนินการเสร็จสิ้น
+    res.send(product); 
   } catch (err) {
-    res.status(500).send("list Product  Error!!"); // ส่งการตอบกลับเมื่อเกิดข้อผิดพลาด
+    res.status(500).send("list Product  Error!!"); 
   }
 };
 
