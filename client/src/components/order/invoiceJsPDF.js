@@ -35,7 +35,7 @@ doc.setFont("MyFont");
     <div>
       <button 
       onClick={handlePDF}
-      className='btn btn-info'>jsPDF</button>
+      className='btn btn-secondary m-ภ'>jsPDF</button>
     </div>
   )
 }

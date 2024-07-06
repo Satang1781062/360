@@ -18,7 +18,7 @@ Font.register({ family: 'Healthy', src: fontDev });
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
-    backgroundColor: "#E4E4E4",
+    backgroundColor: "#FFFFFF",
     fontFamily: 'Healthy',
     textAlign: 'center'
   },

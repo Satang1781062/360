@@ -107,7 +107,7 @@ const OrderTracking = () => {
                       <PDFDownloadLink
                         document={<Invoice order={item} />}
                         fileName="invoice.pdf"
-                        className="btn btn-primary m-1"
+                        className="btn btn-secondary m-1"
                       >
                         PDF Download
                       </PDFDownloadLink>

@@ -9,6 +9,16 @@ import InvoiceBill from "./InvoiceBill";
 import Popup from "./Popup";
 import { Document, Page, View, StyleSheet as PDFStyleSheet, PDFDownloadLink } from "@react-pdf/renderer";
 
+import {
+  HomeOutlined,
+  LoadingOutlined,
+  SettingFilled,
+  SmileOutlined,
+  SyncOutlined,
+  FolderViewOutlined
+} from '@ant-design/icons';
+
+
 const { TabPane } = Tabs;
 
 const Orders = () => {
@@ -285,17 +295,38 @@ const Orders = () => {
 
         <div className="col text-center">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="Tab 1" key="1">
+            <TabPane
+              tab={
+                <span>
+                  <FolderViewOutlined /> 1
+                </span>
+              }
+              key="1"
+            >
               Order Card
               {orderCard}
             </TabPane>
 
-            <TabPane tab="Tab 2" key="2">
+            <TabPane
+              tab={
+                <span>
+                  <FolderViewOutlined /> 2
+                </span>
+              }
+              key="2"
+            >
               Table Ant Design
               <Table dataSource={orders} columns={columns} />
             </TabPane>
 
-            <TabPane tab="Tab 3" key="3">
+            <TabPane
+              tab={
+                <span>
+                  <FolderViewOutlined /> 3
+                </span>
+              }
+              key="3"
+            >
               Table Bootstrap
               {tableBoot}
             </TabPane>
@@ -303,11 +334,7 @@ const Orders = () => {
         </div>
       </div>
 
-      <Popup
-        visible={visible}
-        onClose={handleClosePopup}
-        order={selectedOrder}
-      />
+      <Popup visible={visible} onClose={handleClosePopup} order={selectedOrder} />
     </div>
   );
 };
