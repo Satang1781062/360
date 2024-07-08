@@ -9,7 +9,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'https://three60-9m65.onrender.com',
+      url: 'https:/swagger360healthy.onrender.com',
       description: 'Development server',
     },
   ],
