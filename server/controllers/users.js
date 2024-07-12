@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
-
+const fs = require('fs');
+const path = require('path');
 //Model
 const User = require("../models/User");
 const Product = require("../models/Product")
@@ -7,6 +8,23 @@ const Cart = require('../models/Cart')
 const Order = require('../models/Order')
 const jwt = require("jsonwebtoken");
 // const { use } = require("../routes/api");
+
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'natthasit.muka@gmail.com',
+    pass: 'nfhr zmmo fdeq mxno',
+  },
+});
+
+const getOrderEmailNumber = async () => {
+  const filePath = path.join(__dirname, 'orderNumber.txt');
+  const orderEmailNumber = parseInt(fs.readFileSync(filePath, 'utf-8'), 10);
+  const newOrderEmailNumber = orderEmailNumber + 1;
+  fs.writeFileSync(filePath, newOrderEmailNumber.toString(), 'utf-8');
+  return orderEmailNumber;
+};
 
 exports.listUsers = async (req, res) => {
   try {
@@ -189,17 +207,32 @@ exports.saveOrder = async (req, res) => {
   try {
     let user = await User.findOne({ username: req.user.username }).exec();
     let userCart = await Cart.findOne({ orderdBy: user._id }).exec();
-    let images = req.body.images; // Get images from request body
+    let images = req.body.images;
+
+    // Generate unique order number
+    let orderNumber = generateOrderNumber();
 
     let order = await new Order({
+      orderNumber,
       products: userCart.products,
       orderdBy: user._id,
       cartTotal: userCart.cartTotal,
-      images: images, // Save images in order
+      images: images,
     }).save();
 
-    // + - products
-    let blukOption = userCart.products.map((item) => {
+    const orderEmailNumber = await getOrderEmailNumber();
+    // Send order confirmation email
+    await transporter.sendMail({
+      from: 'natthasit.muka@gmail.com',
+      to: 'natthasit.project@gmail.com', // Replace with admin's email
+      subject: `New Order Placed ${orderEmailNumber}`,
+      html: `<p>Order Number: ${order.orderNumber}</p>
+      <p>For more details, visit <a href="https://360-healthyshop.netlify.app/">360 Healthy Shop</a>.</p>
+      `,
+    });
+
+    // Remove purchased products from inventory
+    let bulkOption = userCart.products.map((item) => {
       return {
         updateOne: {
           filter: { _id: item.product._id },
@@ -207,15 +240,26 @@ exports.saveOrder = async (req, res) => {
         },
       };
     });
-    let updated = await Product.bulkWrite(blukOption, {});
 
-    res.send(updated);
+    await Product.bulkWrite(bulkOption, {});
+
+    // Remove user's cart after checkout
+    await Cart.findOneAndDelete({ orderdBy: user._id }).exec();
+
+    res.status(200).json({ order});
   } catch (err) {
-    console.log(err);
-    res.status(500).send("save ORDER Error");
+    console.error(err);
+    res.status(500).json({ error: 'Could not save order' });
   }
 };
 
+// Function to send order confirmation email
+
+
+// Function to generate unique order number
+const generateOrderNumber = () => {
+  return `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+};
 exports.getOrder= async (req, res) => {
   try {
     const user = await User.findOne({ username: req.user.username }).exec();
