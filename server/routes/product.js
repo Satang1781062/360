@@ -7,6 +7,8 @@ const { create, list, remove, read, update, listBy, searchFilters } = require('.
 // middleware
 const { auth, adminCheck } = require('../middleware/auth');
 
+
+
 // ดึงรายการสินค้าตามจำนวนที่ระบุ
 router.get('/product/:count', list);
 /**

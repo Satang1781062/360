@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Tabs } from "antd";
 import { HeartOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -8,7 +8,8 @@ import { addToWishlist } from "../function/users";
 import { toast } from "react-toastify";
 import _ from "lodash";
 import Footer from "../layouts/Footer";
-
+import { listPromotions } from "../function/promotion";
+import "./SingleProductCard.css"; // นำเข้าไฟล์ CSS ของคุณ
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -16,8 +17,30 @@ const { TabPane } = Tabs;
 const SingleProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => ({ ...state }));
-  const { _id, title, description, images, price, sold, quantity, category } =
-    product;
+  const { _id, title, description, images, price, sold, quantity, category } = product;
+  const [discountedPrice, setDiscountedPrice] = useState(null);
+
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      try {
+        const res = await listPromotions();
+        const promotions = res.data;
+        const productPromotion = promotions.find(promotion =>
+          promotion.products.some(p => p._id === product._id)
+        );
+
+        if (productPromotion) {
+          const discount = productPromotion.discount;
+          const discounted = product.price - (product.price * discount / 100);
+          setDiscountedPrice(discounted);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPromotions();
+  }, [product]);
 
   const handleAddToCart = () => {
     let cart = [];
@@ -27,6 +50,7 @@ const SingleProductCard = ({ product }) => {
     cart.push({
       ...product,
       count: 1,
+      discountedPrice: discountedPrice !== null ? discountedPrice : product.price,
     });
 
     let unique = _.uniqWith(cart, _.isEqual);
@@ -60,7 +84,7 @@ const SingleProductCard = ({ product }) => {
       <div className="container">
         <div className="row justify-content-center align-items-center mb-4">
           <div className="col-md-3">
-            <Carousel autoPlay showArrows={true} infiniteLoop>
+          <Carousel autoPlay showArrows={true} infiniteLoop>
               {images &&
                 images.map((item) => (
                   <div className="carousel-img-container" key={item.public_id}>
@@ -70,7 +94,7 @@ const SingleProductCard = ({ product }) => {
             </Carousel>
             <Tabs>
               <TabPane tab="Description" key="1">
-                {description}
+              {description}
               </TabPane>
               <TabPane tab="More..." key="2">
                 More...
@@ -97,7 +121,17 @@ const SingleProductCard = ({ product }) => {
               <ul className="list-group list-group-flush mt-1">
                 <li className="list-group-item">
                   Price
-                  <span className="float-end">{price}</span>
+                  <span className="float-end">
+                    {discountedPrice !== null && discountedPrice !== undefined ? (
+                      <>
+                        <span className="original-price">{price.toFixed(2)}</span>{" "}
+                        <span className="discounted-price">{discountedPrice.toFixed(2)}</span>
+                      </>
+                    ) : (
+                      price !== null && price !== undefined ? 
+                      price.toFixed(2) : "N/A"
+                    )}
+                  </span>
                 </li>
                 <li className="list-group-item">
                   Quantity
@@ -107,7 +141,7 @@ const SingleProductCard = ({ product }) => {
                   Sold
                   <span className="float-end">{sold}</span>
                 </li>
-                {category && (
+                {product.category && (
                   <li className="list-group-item">
                     Category
                     <span className="float-end">{category.name}</span>

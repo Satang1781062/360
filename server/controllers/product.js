@@ -1,6 +1,6 @@
 const { query } = require("express");
 const Product = require("../models/Product");
-
+const Promotion = require("../models/Promotion");
 
 exports.create = async (req, res) => {
   try {
@@ -125,4 +125,6 @@ exports.searchFilters = async (req, res) => {
   }
 
 };
+
+
 
