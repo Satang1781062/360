@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 //Controller
-const {register,login,listUser,editUser,deleteUser,currentUser,googleLogin} = require ('../controllers/auth')
+const {register,login,listUser,editUser,deleteUser,currentUser,googleLogin, loginFacebook} = require ('../controllers/auth')
 
 
 // middleware
@@ -255,6 +255,8 @@ router.delete('/auth',deleteUser)
 
 
 
-// router.post('/google-login', googleLogin);
+router.post("/google-login", googleLogin);
+
+router.post("/login-facebook", loginFacebook);
 
 module.exports = router;

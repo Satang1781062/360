@@ -100,38 +100,87 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// Google Login
-// Google Login
+
+
 exports.googleLogin = async (req, res) => {
-  const { idToken } = req.body;
-  
+  const { idToken } = req.body; // Extract idToken from request body
+
+  if (!idToken) {
+    return res.status(400).json({ error: 'ID token is required' });
+  }
+
   try {
     const ticket = await client.verifyIdToken({
       idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: process.env.GOOGLE_CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
     });
 
-    const { email_verified, name, email } = ticket.getPayload();
+    const { email, name, picture } = ticket.getPayload();
 
-    if (email_verified) {
-      let user = await User.findOne({ email });
-      if (user) {
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        return res.json({ token, user });
-      } else {
-        const password = email + process.env.JWT_SECRET;
-        user = new User({ username: name, email, password });
-        user.password = await bcrypt.hash(password, 10);
-        await user.save();
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        return res.json({ token, user });
-      }
-    } else {
-      res.status(400).json({ error: 'Google login failed. Try again.' });
+    // Check if user already exists in the database
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // If user does not exist, create a new user
+      user = new User({ email, name, picture });
+      await user.save();
     }
+
+    // Create a JWT token for the user
+    const token = jwt.sign({ user: { email, name } }, "jwtSecret", { expiresIn: '1h' }); // Replace with your JWT generation method
+
+    res.status(200).json({
+      token,
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        picture: user.picture,
+      },
+    });
   } catch (error) {
-    console.error('Google login error:', error);
-    res.status(400).json({ error: 'Google login failed. Try again.' });
+    console.error('Error while verifying Google token:', error);
+    res.status(400).json({
+      error: 'Google login failed. Try again.',
+    });
+  }
+}
+
+// exports.loginFacebook = async (req, res) => {
+//   try {
+//     const { UserID, name, email } = req.body;
+//     var data = {
+//       name: UserID,
+//       username: name
+//     }
+//   }
+// }
+
+exports.loginFacebook = async (req, res) => {
+  try {
+    const { userID, name, email } = req.body;
+
+    // Find user by Facebook userID
+    let user = await User.findOneAndUpdate(
+      { username: userID },
+      { username: name, 'address.email': email, 'address.name': name },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    // Generate JWT token
+    const payload = {
+      user: {
+        username: user.username,
+        role: user.role,
+      },
+    };
+
+    jwt.sign(payload, "jwtSecret", { expiresIn: 3600 }, (err, token) => {
+      if (err) throw err;
+      res.json({ token, payload });
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
   }
 };
-
