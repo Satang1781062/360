@@ -18,7 +18,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(cors());
 app.use(cors({
-  origin: 'http://localhost:3000', // หรือ URL ของ frontend ของคุณ
+  origin: ['http://localhost:3000','https://360healthyshop.netlify.app'], // หรือ URL ของ frontend ของคุณ
   methods: ['GET', 'POST'],
   credentials: true,
 }));
