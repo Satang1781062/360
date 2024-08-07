@@ -157,30 +157,48 @@ exports.googleLogin = async (req, res) => {
 // }
 
 exports.loginFacebook = async (req, res) => {
+  const { accessToken } = req.body;
   try {
-    const { userID, name, email } = req.body;
+    const response = await fetch(`https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,email`);
+    const profile = await response.json();
 
-    // Find user by Facebook userID
-    let user = await User.findOneAndUpdate(
-      { username: userID },
-      { username: name, 'address.email': email, 'address.name': name },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
+    const { id, name, email } = profile;
 
-    // Generate JWT token
-    const payload = {
-      user: {
-        username: user.username,
-        role: user.role,
-      },
-    };
+    // Find or create a user based on the Facebook profile
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({ email, username: name, facebookId: id });
+    }
 
-    jwt.sign(payload, "jwtSecret", { expiresIn: 3600 }, (err, token) => {
-      if (err) throw err;
-      res.json({ token, payload });
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Server Error");
+    // Generate a JWT token
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.json({ token, user });
+  } catch (error) {
+    console.error('Error logging in with Facebook:', error);
+    res.status(500).send('Facebook login failed');
+  }
+};
+
+// Controller for Google login
+exports.loginGoogle = async (req, res) => {
+  const { idToken } = req.body;
+  try {
+    const response = await axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
+    const { email, name } = response.data;
+
+    // Find or create a user based on the Google profile
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({ email, username: name });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.json({ token, user });
+  } catch (error) {
+    console.error('Error logging in with Google:', error);
+    res.status(500).send('Google login failed');
   }
 };
