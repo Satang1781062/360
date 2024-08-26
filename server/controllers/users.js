@@ -227,7 +227,7 @@ exports.saveOrder = async (req, res) => {
       to: 'natthasit.project@gmail.com', // Replace with admin's email
       subject: `New Order Placed ${orderEmailNumber}`,
       html: `<p>Order Number: ${order.orderNumber}</p>
-      <p>For more details, visit <a href="https://360-healthyshop.netlify.app/">360 Healthy Shop</a>.</p>
+      <p>For more details, visit <a href="https://360healthyshop.netlify.app/">360 Healthy Shop</a>.</p>
       `,
     });
 

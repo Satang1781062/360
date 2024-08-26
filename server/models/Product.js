@@ -4,15 +4,15 @@ const { ObjectId } = mongoose.Schema;
 const ProductSchema = new mongoose.Schema(
   {
     title: {
-      type: String,
+      type: String, 
       text: true
     },
     description: {
       type: String
     },
-    category: {
+    category: {  // เปลี่ยนจาก ObjectId เดี่ยวเป็น Array ของ ObjectId
       type: ObjectId,
-      ref: "category"
+      ref: "category",
     },
     price: {
       type: Number
