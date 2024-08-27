@@ -29,7 +29,7 @@ exports.list = async (req, res) => {
     try {
       const id = req.params.id;
       console.log(id)
-      const ccategoryservice = await CategoryService.findOne({_id:id});
+      const categoryservice = await CategoryService.findOne({_id:id});
       return res.send(categoryservice); // ส่งการตอบกลับหลังจากดำเนินการเสร็จสิ้น
     } catch (err) {
       return res.status(500).send("Server Error!!"); // ส่งการตอบกลับเมื่อเกิดข้อผิดพลาด

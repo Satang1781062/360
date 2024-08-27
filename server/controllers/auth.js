@@ -7,17 +7,26 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // Register
 exports.register = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    let user = await User.findOne({ username });
+    const { username, email, password } = req.body;
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
     if (user) {
       return res.status(400).send("User Already exists");
     }
+
+    // Create new user
     const salt = await bcrypt.genSalt(10);
     user = new User({
       username,
+      email,  // Added email field
       password,
     });
+
+    // Hash password
     user.password = await bcrypt.hash(password, salt);
+
+    // Save user to the database
     await user.save();
     res.send("Register Success");
   } catch (err) {
@@ -25,7 +34,6 @@ exports.register = async (req, res) => {
     res.status(500).send("Server Error!");
   }
 };
-
 // Login
 exports.login = async (req, res) => {
   try {
@@ -102,49 +110,49 @@ exports.deleteUser = async (req, res) => {
 
 
 
-exports.googleLogin = async (req, res) => {
-  const { idToken } = req.body; // Extract idToken from request body
+// exports.googleLogin = async (req, res) => {
+//   const { idToken } = req.body; // Extract idToken from request body
 
-  if (!idToken) {
-    return res.status(400).json({ error: 'ID token is required' });
-  }
+//   if (!idToken) {
+//     return res.status(400).json({ error: 'ID token is required' });
+//   }
 
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
-    });
+//   try {
+//     const ticket = await client.verifyIdToken({
+//       idToken,
+//       audience: process.env.GOOGLE_CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+//     });
 
-    const { email, name, picture } = ticket.getPayload();
+//     const { email, name, picture } = ticket.getPayload();
 
-    // Check if user already exists in the database
-    let user = await User.findOne({ email });
+//     // Check if user already exists in the database
+//     let user = await User.findOne({ email });
 
-    if (!user) {
-      // If user does not exist, create a new user
-      user = new User({ email, name, picture });
-      await user.save();
-    }
+//     if (!user) {
+//       // If user does not exist, create a new user
+//       user = new User({ email, name, picture });
+//       await user.save();
+//     }
 
-    // Create a JWT token for the user
-    const token = jwt.sign({ user: { email, name } }, "jwtSecret", { expiresIn: '1h' }); // Replace with your JWT generation method
+//     // Create a JWT token for the user
+//     const token = jwt.sign({ user: { email, name } }, "jwtSecret", { expiresIn: '1h' }); // Replace with your JWT generation method
 
-    res.status(200).json({
-      token,
-      user: {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        picture: user.picture,
-      },
-    });
-  } catch (error) {
-    console.error('Error while verifying Google token:', error);
-    res.status(400).json({
-      error: 'Google login failed. Try again.',
-    });
-  }
-}
+//     res.status(200).json({
+//       token,
+//       user: {
+//         _id: user._id,
+//         email: user.email,
+//         name: user.name,
+//         picture: user.picture,
+//       },
+//     });
+//   } catch (error) {
+//     console.error('Error while verifying Google token:', error);
+//     res.status(400).json({
+//       error: 'Google login failed. Try again.',
+//     });
+//   }
+// }
 
 // exports.loginFacebook = async (req, res) => {
 //   try {
@@ -180,23 +188,42 @@ exports.loginFacebook = async (req, res) => {
   }
 };
 
-// Controller for Google login
-exports.loginGoogle = async (req, res) => {
-  const { idToken } = req.body;
-  try {
-    const response = await axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
-    const { email, name } = response.data;
 
-    // Find or create a user based on the Google profile
+
+// Google Login
+exports.loginGoogle = async (req, res) => {
+  const { token, username, email, picture } = req.body;
+
+  try {
+    // ตรวจสอบว่า user มีอยู่ในฐานข้อมูลหรือไม่
     let user = await User.findOne({ email });
+
+    // ถ้าไม่มี user ในฐานข้อมูล ให้สร้างใหม่
     if (!user) {
-      user = await User.create({ email, username: name });
+      user = new User({
+        username,
+        email,
+        role: "user", // หรือกำหนด role ตามที่คุณต้องการ
+        address: {
+          email,
+        },
+      });
+      await user.save();
     }
 
-    // Generate a JWT token
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // Generate a JWT token with username and role in the payload
+    const jwtToken = jwt.sign(
+      {
+        user: {
+          username: user.username,
+          role: user.role,
+        },
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
 
-    res.json({ token, user });
+    res.json({ token: jwtToken, user });
   } catch (error) {
     console.error('Error logging in with Google:', error);
     res.status(500).send('Google login failed');
