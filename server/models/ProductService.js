@@ -10,10 +10,10 @@ const ProductServiceSchema = new mongoose.Schema(
     description: {
       type: String
     },
-    category: [{  // เปลี่ยนจาก ObjectId เดี่ยวเป็น Array ของ ObjectId
+    category: {  // เปลี่ยนจาก ObjectId เดี่ยวเป็น Array ของ ObjectId
       type: ObjectId,
       ref: "category",
-    }],
+    },
     price: {
       type: Number
     },
