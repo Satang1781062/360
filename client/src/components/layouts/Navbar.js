@@ -15,7 +15,7 @@ import {
 import Search from "../card/Search";
 import "./Navbar.css";
 
-import logo from "./img/logo192.png";
+import logo from "./img/logo1.png";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -46,18 +46,43 @@ const NavBar = () => {
           />
         </Link>
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Toggle aria-controls="basic-navbar-nav">
+    <span className="menu-text">MENU</span>
+  </Navbar.Toggle>
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto d-flex w-50">
           <Nav.Link as={Link} to="/" className="flex-fill text-center">
             <HomeOutlined /> หน้าแรก
           </Nav.Link>
           <Nav.Link as={Link} to="/shop" className="flex-fill text-center">
-            <ShoppingOutlined /> ร้านค้า
+            <HomeOutlined /> ร้านค้า
           </Nav.Link>
+          {/* <NavDropdown
+            title={
+              <span>
+                <ShoppingOutlined /> ร้านค้า
+              </span>
+            }
+            id="shop-dropdown"
+            className="flex-fill text-center"
+          >
+            <NavDropdown.Item as={Link} to="/shop">
+              สินค้า360HealthyShop
+            </NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/shop-service">
+              สินค้าบริการ
+            </NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/shop/3">
+              ร้านค้าสวัสดิการ
+            </NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item as={Link} to="/shop">
+              ไปที่หน้าร้านค้า
+            </NavDropdown.Item>
+          </NavDropdown> */}
           <Nav.Link
             as={Link}
-            to="/promotions"
+            to="/promotion-user"
             className="flex-fill text-center"
           >
             <GiftOutlined /> โปรโมชั่น

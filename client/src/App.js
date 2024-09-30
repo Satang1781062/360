@@ -10,6 +10,8 @@ import Product from "./components/page/Product";
 import Shop from "./components/page/Shop";
 import Cart from "./components/page/Cart";
 
+import ShopService from "./components/page/Shop/ShopService";
+
 //Layout
 import Navbar from "./components/layouts/Navbar";
 import Header from "./components/layouts/็Header";
@@ -20,7 +22,11 @@ import ManageAdmin from "./components/page/admin/ManageAdmin";
 import CreateCaterogy from "./components/page/admin/category/CreateCaterogy";
 import UpdateCategory from "./components/page/admin/category/UpdateCategory";
 import CreateProduct from "./components/page/admin/product/CreateProduct";
+import CreateProductService from "./components/page/admin/product/CreateProductService";
 import UpdateProduct from "./components/page/admin/product/UpdateProduct";
+import CreateCaterogyService from "./components/page/admin/category/CreateCategooryService";
+
+import AdminChat from "./components/page/admin/AdminChart";
 
 import Orders from "./components/page/admin/Order";
 
@@ -31,6 +37,8 @@ import WishList from "./components/page/user/WishList";
 import History from "./components/page/user/History";
 import ContactShop from "./components/page/ContactShop";
 import OederTracking from "./components/page/user/OrderTracking";
+
+import ChatBox from "./components/page/user/ChatBox";
 
 //function
 import { currentUser } from "./components/function/auth";
@@ -46,6 +54,10 @@ import SideDrawer from "./components/drawer/SideDrawer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/layouts/Footer";
+import AdminChart from "./components/page/admin/AdminChart";
+import PromotionManagement from "./components/page/admin/PromotionManagement";
+import Promotions from "./components/page/Promotions";
+import Promotion from "./components/page/admin/Promotion";
 
 function App() {
   const dispatch = useDispatch();
@@ -85,8 +97,10 @@ function App() {
 
         <Route path="/product/:id" element={<Product />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/shop-service" element={<ShopService />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/contact-shop" element={<ContactShop />} />
+        <Route path="/promotion-user" element={<Promotions />} />
 
         <Route
           path="/admin/index"
@@ -114,6 +128,14 @@ function App() {
           }
         />
         <Route
+          path="/admin/create-category-service"
+          element={
+            <AdminRoute>
+              <CreateCaterogyService />
+            </AdminRoute>
+          }
+        />
+        <Route
           path="/admin/update-category/:id"
           element={
             <AdminRoute>
@@ -126,6 +148,24 @@ function App() {
           element={
             <AdminRoute>
               <CreateProduct />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/create-product-service/"
+          element={
+            <AdminRoute>
+              <CreateProductService />
+            </AdminRoute>
+          }
+        />
+
+
+        <Route
+          path="/admin/promotion-product/"
+          element={
+            <AdminRoute>
+              <Promotion />
             </AdminRoute>
           }
         />
@@ -144,6 +184,14 @@ function App() {
           element={
             <AdminRoute>
               <Orders />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/chart-sell"
+          element={
+            <AdminRoute>
+              <AdminChart />
             </AdminRoute>
           }
         />
@@ -190,7 +238,16 @@ function App() {
             </UserRoute>
           }
         />
+        <Route
+          path="/user/chat"
+          element={
+            <UserRoute>
+              <ChatBox />
+            </UserRoute>
+          }
+        />
       </Routes>
+      <Footer/>
       
     </div>
   );

@@ -65,7 +65,7 @@ const ContactShop = () => {
         </div>
       </div>
     </div>
-    <Footer/>
+    {/* <Footer/> */}
     </>
   );
 };

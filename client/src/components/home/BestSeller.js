@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-
 import { listProductBy } from "../function/product";
 import ProductCard from "../card/ProductCard";
 import LoadingCard from "../card/LoadingCard";
+import "./BestSeller.css"; // Import CSS file for custom scroll styles
 
 const BestSeller = () => {
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ const BestSeller = () => {
 
   const loadData = () => {
     setLoading(true);
-    listProductBy("sold", "desc", 4)
+    listProductBy("sold", "desc", 8) // Fetch more products for horizontal scroll
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -26,22 +26,22 @@ const BestSeller = () => {
   };
 
   return (
-    <>
-      <div className="container">
-        {loading ? (
-          <LoadingCard  count={3}/>
-        ) : (
-          <div className="row justify-content-center">
+    <div className="container best-seller-container">
+      {loading ? (
+        <LoadingCard count={3} />
+      ) : (
+        <div className="horizontal-scroll-container">
+          <div className="horizontal-scroll">
             {products.map((item, index) => (
-              <div key={index} className="col-md-3">
+              <div key={index} className="col-2 col-md-2 mb-3 horizontal-scroll-item">
                 <ProductCard product={item} />
               </div>
             ))}
           </div>
-        )}
-      </div>
-    </>
-  )
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default BestSeller;

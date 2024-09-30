@@ -1,0 +1,19 @@
+.promotions-container {
+    background-color: #ffffff; /* ตัวอย่างสีพื้นหลัง */
+    padding: 20px; /* ตัวอย่างการเพิ่มช่องว่างภายใน */
+    border-radius: 8px; /* ตัวอย่างการเพิ่มความโค้งมุม */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), /* side and bottom shadow */
+                0 2px 4px -1px rgba(0, 0, 0, 0.06); /* เพิ่ม box-shadow */
+    position: relative; /* Add this line to make sure the absolute positioning works */
+    text-align: center;
+}
+
+.promotion-logo {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 100px; /* กำหนดขนาดโลโก้ */
+    height: 100px; /* กำหนดขนาดโลโก้ */
+}
+
+

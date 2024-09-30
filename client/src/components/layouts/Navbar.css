@@ -12,6 +12,7 @@ Navbar.css
   .ant-menu-item:hover,
   .ant-menu-submenu-title:hover {
     background-color: #195a19; 
+    
   }
 
 
@@ -40,8 +41,15 @@ Navbar.css
 
 
   .custom-navbar {
-    background-color: #48945b8e; 
-    /* background-color: #f183ba; สีที่คุณต้องการ */
+    /* background-color: #48945b8e;  */
+    /* background-color: #f183ba;  */
+    /* background-color: #2063318e;  */
+    /* background-color: #1a5a2a96;  */
+    /* background-color: #256e37b0;  */
+
+
+    background-color: #1f7223b4; 
+    /* background-color: #1a5a2aa1;  */
     color: #ffffff;
     position: fixed; /* หรือ fixed */
   top: 0;
@@ -80,4 +88,14 @@ Navbar.css
 
   .content {
     padding-top: 80px; /* ปรับค่านี้ตามความสูงของ Navbar */
+  }
+
+  .menu-text {
+    color: #ffffff; /* สีขาวสำหรับข้อความ MENU */
+    font-size: 18px; /* ขนาดของข้อความ MENU */
+    font-weight: bold; /* ให้ข้อความหนา */
+  }
+  
+  .navbar-toggler-icon {
+    display: none; /* ซ่อนไอคอน Hamburger */
   }

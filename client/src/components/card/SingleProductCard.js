@@ -19,6 +19,8 @@ const SingleProductCard = ({ product }) => {
   const { user } = useSelector((state) => ({ ...state }));
   const { _id, title, description, images, price, sold, quantity, category } = product;
   const [discountedPrice, setDiscountedPrice] = useState(null);
+  const [promotionDates, setPromotionDates] = useState({ startDate: null, endDate: null });
+  const [promotionTitle, setPromotionTitle] = useState("");
 
   useEffect(() => {
     const fetchPromotions = async () => {
@@ -33,6 +35,13 @@ const SingleProductCard = ({ product }) => {
           const discount = productPromotion.discount;
           const discounted = product.price - (product.price * discount / 100);
           setDiscountedPrice(discounted);
+          setPromotionDates({
+            startDate: new Date(productPromotion.startDate).toLocaleDateString(),
+            endDate: new Date(productPromotion.endDate).toLocaleDateString(),
+          });
+          setPromotionTitle(productPromotion.title);
+        } else {
+          setPromotionTitle("");
         }
       } catch (error) {
         console.log(error);
@@ -81,29 +90,32 @@ const SingleProductCard = ({ product }) => {
 
   return (
     <>
-      <div className="container">
+      <div className="container single-product-container">
         <div className="row justify-content-center align-items-center mb-4">
-          <div className="col-md-3">
-          <Carousel autoPlay showArrows={true} infiniteLoop>
+          <div className="card-tap col-md-3">
+            <Carousel autoPlay showArrows={true} infiniteLoop showThumbs={true}>
               {images &&
                 images.map((item) => (
                   <div className="carousel-img-container" key={item.public_id}>
+                    {console.log(item.url)} {/* ตรวจสอบ URL ของภาพ */}
                     <img src={item.url} className="carousel-img" />
                   </div>
                 ))}
             </Carousel>
             <Tabs>
               <TabPane tab="Description" key="1">
-              {description}
+                {description}
               </TabPane>
               <TabPane tab="More..." key="2">
                 More...
               </TabPane>
             </Tabs>
           </div>
-
-          <div className="col-md-3">
-            <h2 className="bg-info p-2 mt-0">{title}</h2>
+          {/* <div className="col-1"></div> */}
+          <div className="card-tap col-md-3">
+            <h2 className="p-2 mt-0" style={{ backgroundColor: "#eb6472", color: "#fff" }}>
+              {discountedPrice !== null ? promotionTitle : title}
+            </h2>
             <Card
               actions={[
                 <a onClick={handleAddToWishList}>
@@ -147,12 +159,24 @@ const SingleProductCard = ({ product }) => {
                     <span className="float-end">{category.name}</span>
                   </li>
                 )}
+                {promotionDates.startDate && (
+                  <li className="list-group-item">
+                    Promotion Start Date
+                    <span className="float-end">{promotionDates.startDate}</span>
+                  </li>
+                )}
+                {promotionDates.endDate && (
+                  <li className="list-group-item">
+                    Promotion End Date
+                    <span className="float-end">{promotionDates.endDate}</span>
+                  </li>
+                )}
               </ul>
             </Card>
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

@@ -13,6 +13,9 @@ const MenubarUser = () => {
       <li className="nav-item">
           <Link to="/user/history"> ประวัติการสั่งซื้อ </Link>
         </li>
+      {/* <li className="nav-item">
+          <Link to="/user/chat"> ติดต่อ </Link>
+        </li> */}
         
       </ul>
     </nav>

@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ProductTableInCart from "../card/ProductTableInCart";
 import { useNavigate } from "react-router-dom";
-
 import { ToastContainer, toast } from "react-toastify";
 import Alert from "react-bootstrap/Alert";
 
 //function
 import { userCart } from "../function/users";
 
-//laoyt
+//layout
 import Footer from "../layouts/Footer";
 
 const Cart = () => {
@@ -19,10 +18,10 @@ const Cart = () => {
   const { cart, user } = useSelector((state) => ({ ...state }));
 
   const getTotal = () => {
-    return cart.reduce((currenValue, nextValue) => {
-      return currenValue + nextValue.count * nextValue.price;
+    return cart.reduce((currentValue, nextValue) => {
+      return currentValue + nextValue.count * (nextValue.discountedPrice || nextValue.price);
     }, 0);
-  };
+  }
 
   const handleSaveOrder = () => {
     // ตรวจสอบจำนวนสินค้า
@@ -32,8 +31,16 @@ const Cart = () => {
         return;
       }
     }
-
-    userCart(user.token, cart)
+  
+    const adjustedCart = cart.map((item) => ({
+      ...item,
+      _id: item._id,
+      count: item.count,
+      price: item.discountedPrice || item.price,
+      type: item.product ? "product" : "productservice"  // เพิ่ม type ของสินค้า
+    }));
+  
+    userCart(user.token, adjustedCart)  // ส่ง token ที่ได้รับจาก Google
       .then((res) => {
         console.log(res);
         navigate("/checkout");
@@ -62,55 +69,57 @@ const Cart = () => {
 
   return (
     <>
-    <div className="container">
-      <div className="row mt-5" style={{
-            boxShadow: "0 0 10px rgba(150, 27, 78, 0.7)",
-            padding: "15px",
-            borderRadius: "5px",
-          }}>
+      <div className="container">
         <div
-          className="col-md-7"
+          className="row mt-5"
           style={{
-            boxShadow: "0 3px 10px rgba(0, 0, 0, 0.10)",
+            boxShadow: "0 0 10px rgba(150, 27, 78, 0.7)",
             padding: "15px",
             borderRadius: "5px",
           }}
         >
-          <h5>Cart {cart.length} product</h5>
-          {!cart.length ? <p>No Product in Cart</p> : showCartItem()}
-        </div>
-        <div className="col-md-4">
-          <h5>Summary</h5>
-          <hr />
-          {cart.map((item, index) => (
-            <p key={index}>
-              {item.title} x {item.count} = {item.price * item.count}
-            </p>
-          ))}
-          <hr />
-          Total:<b> {getTotal()} </b>
-          <hr />
-          {user ? (
-            <button
-              className="btn btn-success"
-              onClick={handleSaveOrder}
-              disabled={!cart.length}
-            >
-              Check Out
-            </button>
-          ) : (
-            <button className="btn btn-danger">
-              <Link to="/login" state="cart">
-                Login To CheckOut
-              </Link>
-            </button>
-          )}
+          <div
+            className="col-md-7"
+            style={{
+              boxShadow: "0 3px 10px rgba(0, 0, 0, 0.10)",
+              padding: "15px",
+              borderRadius: "5px",
+            }}
+          >
+            <h5>Cart {cart.length} product</h5>
+            {!cart.length ? <p>No Product in Cart</p> : showCartItem()}
+          </div>
+          <div className="col-md-4">
+            <h5>Summary</h5>
+            <hr />
+            {cart.map((item, index) => (
+              <p key={index}>
+                {item.title} x {item.count} = {item.price * item.count}
+              </p>
+            ))}
+            <hr />
+            Total:<b> {getTotal()} </b>
+            <hr />
+            {user ? (
+              <button
+                className="btn btn-success"
+                onClick={handleSaveOrder}
+                disabled={!cart.length}
+              >
+                Check Out
+              </button>
+            ) : (
+              <button className="btn btn-danger">
+                <Link to="/login" state="cart">
+                  Login To CheckOut
+                </Link>
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
 
-    <Footer/>
-
+      {/* <Footer /> */}
     </>
   );
 };

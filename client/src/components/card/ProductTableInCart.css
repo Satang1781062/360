@@ -1,0 +1,40 @@
+/* จัดการสไตล์ของ count-container เพื่อการแสดงผลในจอขนาดต่างๆ */
+.count-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* สไตล์ของปุ่มเพิ่มและลด */
+  .count-button {
+    width: 30px; /* ขนาดความกว้างของปุ่ม */
+    height: 30px; /* ขนาดความสูงของปุ่ม */
+    font-size: 18px; /* ขนาดตัวอักษร */
+    padding: 0; /* กำจัด padding */
+  }
+  
+  /* สไตล์ของ input สำหรับแสดงจำนวน */
+  .count-input {
+    text-align: center; /* จัดตัวเลขให้อยู่ตรงกลาง */
+    max-width: 50px; /* กำหนดขนาดความกว้าง */
+    margin: 0 5px; /* เว้นระยะห่างระหว่างปุ่ม */
+  }
+  
+  /* ปรับขนาดและการจัดวางของปุ่มบนหน้าจอมือถือ */
+  @media (max-width: 768px) {
+    .count-container {
+      flex-direction: row; /* จัดวางปุ่มในแนวนอน */
+    }
+  
+    .count-input {
+      width: 40px; /* ปรับขนาดความกว้าง */
+      font-size: 16px; /* ลดขนาดฟอนต์ */
+    }
+  
+    .count-button {
+      width: 30px;
+      height: 30px;
+      font-size: 16px; /* ปรับขนาดฟอนต์ในปุ่ม */
+    }
+  }
+  

@@ -9,6 +9,7 @@ import { createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./components/reducers/index";
 import 'antd/dist/antd.css';
+// import { stores } from './components/store/store';
 
 // Route
 import { BrowserRouter } from "react-router-dom";

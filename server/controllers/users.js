@@ -4,6 +4,8 @@ const path = require('path');
 //Model
 const User = require("../models/User");
 const Product = require("../models/Product")
+const ProductService = require('../models/ProductService')
+
 const Cart = require('../models/Cart')
 const Order = require('../models/Order')
 const jwt = require("jsonwebtoken");
@@ -136,7 +138,14 @@ exports.userCart = async (req, res) => {
     // เติมสินค้าลงใน array
     for (let i = 0; i < cart.length; i++) {
       let object = {};
-      object.product = cart[i]._id;
+
+      // ตรวจสอบว่าสินค้ามาจาก Product หรือ ProductService
+      if (cart[i].isProductService) {
+        object.productservice = cart[i]._id;
+      } else {
+        object.product = cart[i]._id;
+      }
+
       object.count = cart[i].count;
       object.price = cart[i].price;
       products.push(object);
@@ -162,6 +171,7 @@ exports.userCart = async (req, res) => {
 
 
 
+
 exports.getUserCart = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.user.username }).exec();
@@ -170,7 +180,8 @@ exports.getUserCart = async (req, res) => {
     }
 
     let cart = await Cart.findOne({ orderdBy: user._id })
-      .populate('products.product', "_id title price")
+      .populate('products.product', "_id title price") // อ้างอิง product
+      .populate('products.productservice', "_id title price") // อ้างอิง productservice
       .exec();
 
     if (!cart) {
@@ -178,7 +189,7 @@ exports.getUserCart = async (req, res) => {
     }
 
     const { products, cartTotal } = cart;
-    console.log('Fetched cart:', products, cartTotal); // Logging เพิ่มเติม
+    console.log('Fetched cart11:', products, cartTotal); // Logging เพิ่มเติม
     res.json({ products, cartTotal });
   } catch (err) {
     console.log(err);

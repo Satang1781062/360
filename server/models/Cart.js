@@ -1,26 +1,29 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
+
 const CartSchema = new mongoose.Schema(
   {
-    products:[
+    products: [
       {
-        product:{
+        product: {
           type: ObjectId,
-          ref: 'product'
+          ref: 'product' // Ensure this matches your Product model name
+        },
+        productservice: {
+          type: ObjectId,
+          ref: 'productservice' // Ensure this matches your ProductService model name
         },
         count: Number,
         price: Number
       }
     ],
     cartTotal: Number,
-    orderdBy:{
-      type:ObjectId,
-      ref:'users'
+    orderdBy: {
+      type: ObjectId,
+      ref: 'User' // Ensure this matches your User model name
     }
-    
   },
   { timestamps: true }
 );
 
-//"users"คือชื่อใน Collection ของ mongo  หรือชื่อTable
-module.exports = Cart = mongoose.model("cart", CartSchema);
+module.exports = mongoose.model("cart", CartSchema);

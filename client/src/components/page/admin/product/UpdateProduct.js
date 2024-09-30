@@ -9,6 +9,7 @@ import FileUpload from "./FileUpload";
 //function
 import { readProduct, updateProduct } from "../../../function/product";
 import { listCategory } from "../../../function/category";
+import { listCategoryService } from "../../../function/categoryservice";
 
 const UpdateProduct = () => {
   const initialstate = {
@@ -27,7 +28,9 @@ const UpdateProduct = () => {
 
   const [values, setValues] = useState(initialstate);
   const [category, setCategory] = useState([]);
-  const [loadding, setLoading] = useState(false);
+  const [categoriesService, setCategoriesService] = useState([]);
+  const [selectedSource, setSelectedSource] = useState("category"); // Default selection for source
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -37,6 +40,7 @@ const UpdateProduct = () => {
     readProduct(params.id)
       .then((res) => {
         setValues({ ...values, ...res.data });
+        setSelectedSource(res.data.category ? "category" : "categoryService");
       })
       .catch((err) => {
         console.log(err);
@@ -48,30 +52,31 @@ const UpdateProduct = () => {
       .catch((err) => {
         console.log(err);
       });
+    listCategoryService(user.token)
+      .then((res) => {
+        setCategoriesService(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  console.log("product", values);
-  console.log("category", category);
 
-  const handleChang = (e) => {
-    // console.log(e.target.name, e.target.value)
+  const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
     updateProduct(user.token, values._id, values)
       .then((res) => {
-
-        setLoading(false)
-        toast.success('อัพเดตราการ'+res.data.title+'สำเร็จ')
-        console.log(res);
-        navigate('/admin/index')
+        setLoading(false);
+        toast.success("อัพเดตสินค้าสำเร็จ");
+        navigate("/admin/index");
       })
       .catch((err) => {
-        setLoading(false)
-        toast.error('อัพเดตราการไม่สำเร็จ')
-        console.log(err);
+        setLoading(false);
+        toast.error("อัพเดตสินค้าไม่สำเร็จ");
       });
   };
 
@@ -82,54 +87,62 @@ const UpdateProduct = () => {
           <MenubarAdmin />
         </div>
         <div className="col">
-          {loadding
-          ?<h2>Loading...</h2>
-          :<h2>Product Update</h2>
-          }
-          
+          {loading ? <h2>Loading...</h2> : <h2>Product Update</h2>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>title</label>
+              <label>Title</label>
               <input
                 className="form-control"
                 type="text"
                 name="title"
                 value={values.title}
-                onChange={handleChang}
-              ></input>
+                onChange={handleChange}
+              />
             </div>
 
             <div className="form-group">
-              <label>description</label>
+              <label>Description</label>
               <input
                 className="form-control"
                 type="text"
                 name="description"
                 value={values.description}
-                onChange={handleChang}
-              ></input>
+                onChange={handleChange}
+              />
             </div>
 
             <div className="form-group">
-              <label>price</label>
+              <label>Price</label>
               <input
                 className="form-control"
                 type="number"
                 name="price"
                 value={values.price}
-                onChange={handleChang}
-              ></input>
+                onChange={handleChange}
+              />
             </div>
 
             <div className="form-group">
-              <label>quantity</label>
+              <label>Quantity</label>
               <input
                 className="form-control"
                 type="number"
                 name="quantity"
                 value={values.quantity}
-                onChange={handleChang}
-              ></input>
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Category Source</label>
+              <select
+                className="form-control"
+                value={selectedSource}
+                onChange={(e) => setSelectedSource(e.target.value)}
+              >
+                <option value="category">Category</option>
+                <option value="categoryService">Category Service</option>
+              </select>
             </div>
 
             <div className="form-group">
@@ -137,21 +150,28 @@ const UpdateProduct = () => {
               <select
                 className="form-control"
                 name="category"
-                onChange={handleChang}
-                value={values.category._id}
+                value={values.category ? values.category._id : ""}
+                onChange={handleChange}
                 required
               >
                 <option>Pless select</option>
-                {category.length > 0 &&
+                {selectedSource === "category" &&
                   category.map((item) => (
+                    <option key={item._id} value={item._id}>
+                      {item.name}
+                    </option>
+                  ))}
+                {selectedSource === "categoryService" &&
+                  categoriesService.map((item) => (
                     <option key={item._id} value={item._id}>
                       {item.name}
                     </option>
                   ))}
               </select>
             </div>
+
             <FileUpload
-              loadding={loadding}
+              loading={loading}
               setLoading={setLoading}
               values={values}
               setValues={setValues}

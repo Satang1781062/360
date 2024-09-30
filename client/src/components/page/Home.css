@@ -1,0 +1,97 @@
+.box-shadow {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ffffff;
+  }
+
+  .blinking-box {
+    border: 2px solid #ff1493; /* สีขอบ */
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    animation: blinking 1s infinite;
+    text-align: center;
+    width: fit-content;
+    margin: 0 auto; /* จัดให้อยู่ตรงกลางแนวนอน */
+  }
+  
+  /* Animation กระพริบ */
+  @keyframes blinking {
+    0% { background-color: #ff1493; color: #fff; } 
+    50% { background-color: #fff; color: #ff1493; } 
+    100% { background-color: #ff1493; color: #fff; } 
+  }
+  
+  /* ใช้ Flexbox ในการจัดให้ตรงกลางแนวตั้ง */
+  .center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* ปรับความสูงตามต้องการ */
+  }
+  
+
+  /* Home.css
+.home-container {
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 10px;
+  }
+
+  .text-center p {
+    font-size: 14px;
+  }
+
+  .img-fluid {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .blinking-box {
+    font-size: 18px;
+  }
+} */
+
+
+.content-container {
+  display: flex;
+}
+
+/* Style the sidebar (menu) */
+.sidebar-container {
+  width: 250px; /* กำหนดความกว้างของเมนูด้านข้าง */
+  background-color: #f8f9fa; /* สีพื้นหลังของเมนู */
+}
+
+/* Style the carousel area */
+.carousel-container {
+  display: flex;
+  justify-content: center; /* จัดให้อยู่ตรงกลางในแนวนอน */
+  align-items: center;     /* จัดให้อยู่ตรงกลางในแนวตั้ง */
+           /* ให้ความสูง 100% ของ viewport */
+  margin: 0 auto;         /* จัดให้อยู่กลางถ้าจำเป็น */
+}
+
+.row.container {
+  width: 100%; /* ทำให้แนวนอนเต็มพื้นที่ */
+}
+
+.image-slide img {
+  width: 100%;        /* ทำให้รูปภาพเต็มความกว้าง */
+  height: auto;      /* ทำให้สูงเป็นอัตโนมัติตามสัดส่วน */
+  max-height: 400px; /* ปรับความสูงสูงสุดตามต้องการ */
+  object-fit: cover;  /* ทำให้รูปภาพเต็มพื้นที่ โดยไม่เปลี่ยนสัดส่วน */
+}
+
+.menu {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงา */
+  border-radius: 8px; /* ปรับให้ขอบมีความมน */
+  padding: 10px; /* ปรับระยะห่างด้านใน */
+  background-color: #fff; /* ให้พื้นหลังเป็นสีขาวเพื่อให้ดูชัดเจน */
+}

@@ -1,27 +1,18 @@
-.single-product-container {
-    padding-top: 50px;
-    padding-bottom: 50px;
-  }
-
-  .custom-card-column {
-  margin-top: 10px;
-  /* margin-right: auto; */
+.carousel-img-container {
+  width: 100%; /* ให้ container มีขนาด 100% ของ parent */
+  height: auto;
 }
-  
-  @media (max-width: 768px) {
-    .single-product-container {
-      padding-top: 30px;
-      padding-bottom: 30px;
-    }
-  
-    .col-md-6 {
-      margin-bottom: 20px;
-    }
-  }
 
-  .carousel-img-container {
+.carousel-img {
+  max-width: 100%; /* ทำให้รูปปรับขนาดอัตโนมัติตาม container */
+  height: auto; /* ป้องกันการบิดเบือนของรูป */
+  object-fit: contain; /* ทำให้รูปแสดงภายในขอบเขตโดยไม่ถูกตัด */
+  display: block; /* ป้องกันปัญหาการไม่แสดง */
+}
+
+/* .carousel-img-container {
   width: 100%;
-  padding-top: 100%; /* Maintains a square ratio (1:1 aspect ratio) */
+  padding-top: 100%; 
   position: relative;
 }
 
@@ -31,7 +22,53 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures the image covers the container */
+  object-fit: cover; 
 }
 
-  
+
+.carousel .thumb img {
+  width: 100%; 
+  height: auto; 
+  object-fit: contain; 
+} */
+
+.original-price {
+  text-decoration: line-through;
+  color: red;
+  margin-right: 10px;
+}
+
+.discounted-price {
+  color: green;
+}
+
+@media (max-width: 768px) {
+  .single-product-container {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+  .col-md-6 {
+    margin-bottom: 20px;
+  }
+}
+
+.card-tap {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงา */
+  border-radius: 8px; /* ปรับให้ขอบมีความมน */
+  padding: 10px; /* ปรับระยะห่างด้านใน */
+  background-color: #fff; /* ให้พื้นหลังเป็นสีขาวเพื่อให้ดูชัดเจน */
+}
+
+.carousel .thumb {
+  width: 60px; /* กำหนดขนาด thumbnails */
+  height: 60px;
+}
+
+/* .carousel-img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+} */
+
+

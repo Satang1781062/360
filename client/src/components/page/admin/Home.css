@@ -3,6 +3,8 @@
     margin-top: 300px; /* ปรับระยะห่างจากข้างบน */
     text-align: center; /* จัดข้อความให้กึ่งกลาง */
     color: rgb(69, 61, 75);
+    margin-top: 20px; /* ระยะห่างด้านบนของ Typing Effect */
+    margin-bottom: 20px; /* ระยะห่างด้านล่างของ Typing Effect */
   }
 
   .row {

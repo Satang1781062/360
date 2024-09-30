@@ -1,0 +1,39 @@
+
+.navUserHoome .nav-item a {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.navUserHome ul {
+  list-style-type: none; /* ลบรูปเล่มรายการ */
+  padding: 0;
+}
+
+.navUserHome li {
+  margin-bottom: 10px; /* ระยะห่างระหว่างรายการ */
+}
+
+.navUserHome .nav-item a {
+  display: block;
+  padding: 10px 20px;
+  color: #525252; /* สีของตัวหนังสือเมื่อไม่ได้ชี้ */
+  text-decoration: none;
+}
+.menu-logo {
+  width: 40px; /* ขนาดความกว้างของโลโก้ */
+  height: 40px; /* ขนาดความสูงของโลโก้ */
+  margin-right: 10px; /* ระยะห่างระหว่างโลโก้กับข้อความ */
+}
+
+.navUserHome .nav-item a:hover {
+  background-color: #73ca73; /* สีพื้นหลังเมื่อชี้ */
+  color: #ffffff; /* สีของตัวหนังสือเมื่อชี้ */
+}
+
+.navUserHome {
+  background-color: #ffffff; /* สีพื้นหลังสีเทา */
+  height: 100%; /* ให้เมนูทั้งส่วนสูง */ /* ให้เมนูทั้งส่วนสูง */
+  padding-top: 20px; /* ระยะห่างด้านบนของเมนู */
+}

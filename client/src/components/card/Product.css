@@ -1,6 +1,32 @@
-.product-card {
-    width: 100%;
-    max-width: 250px; /* ความกว้างสูงสุด */
-    margin: auto; /* จัดให้กลาง */
-  }
-  
+.product-card-container {
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+  margin: auto;
+}
+
+.promotion-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: red;
+  color: white;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 3px;
+  z-index: 1;
+  animation: blink 1s infinite; /* เพิ่ม animation */
+}
+
+@keyframes blink {
+  0% { background-color: red; }
+  50% { background-color: pink; }
+  100% { background-color: red; }
+}
+
+.product-price {
+  margin-top: 10px;
+  color: #4CAF50; /* เปลี่ยนสีตามที่ต้องการ */
+  font-weight: bold; /* ทำให้ตัวหนา */
+}

@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Resizer from "react-image-file-resizer";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Avatar, Badge } from "antd";
+import { Avatar, Badge, Spin } from "antd";
 
 const FileUpload = ({ images, setImages }) => {
   const { user } = useSelector((state) => ({ ...state }));
+  const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับการโหลดภาพ
 
   const handleChangFile = (e) => {
     const files = e.target.files;
     if (files) {
+      setLoading(true); // ตั้งค่าโหลดเป็น true
       let allfileUpload = [...images];
       for (let i = 0; i < files.length; i++) {
         Resizer.imageFileResizer(
@@ -35,6 +37,9 @@ const FileUpload = ({ images, setImages }) => {
               .catch((err) => {
                 console.log(err);
                 toast.error("Image upload failed");
+              })
+              .finally(() => {
+                setLoading(false); // ตั้งค่าโหลดเป็น false เมื่อเสร็จสิ้นการอัพโหลด
               });
           },
           "base64"
@@ -78,23 +83,32 @@ const FileUpload = ({ images, setImages }) => {
         </span>
       ))}
       <hr />
-      <div className="form-group">
-        <label className="btn btn-primary"style={{
-                backgroundColor: "rgb(233, 57, 139)",
-                borderColor: "rgb(233, 57, 139)",
-              }}>
-          Choose File
-          <input
-            onChange={handleChangFile}
-            className="form-control"
-            type="file"
-            hidden
-            multiple
-            accept="image/*"
-            name="file"
-          ></input>
-        </label>
-      </div>
+      {loading ? ( // แสดง Spin ขณะกำลังโหลด
+        <div className="text-center">
+          <Spin tip="Uploading..." />
+        </div>
+      ) : (
+        <div className="form-group">
+          <label
+            className="btn btn-primary"
+            style={{
+              backgroundColor: "rgb(233, 57, 139)",
+              borderColor: "rgb(233, 57, 139)",
+            }}
+          >
+            Choose File
+            <input
+              onChange={handleChangFile}
+              className="form-control"
+              type="file"
+              hidden
+              multiple
+              accept="image/*"
+              name="file"
+            ></input>
+          </label>
+        </div>
+      )}
       <br />
     </>
   );

@@ -3,48 +3,39 @@ import MenubarAdmin from "../../layouts/MenubarAdmin";
 import { useSelector } from "react-redux";
 import { getOrdersAdmin, updateStatusOrder } from "../../function/admin";
 import { toast } from "react-toastify";
-import { Tabs, Table, Modal, Button, Image, StyleSheet } from "antd";
-import Invoice from "./Invoice";
-import InvoiceBill from "./InvoiceBill";
-import Popup from "./Popup";
-import { Document, Page, View, StyleSheet as PDFStyleSheet, PDFDownloadLink } from "@react-pdf/renderer";
-
-import {
-  HomeOutlined,
-  LoadingOutlined,
-  SettingFilled,
-  SmileOutlined,
-  SyncOutlined,
-  FolderViewOutlined
-} from '@ant-design/icons';
+import { Tabs, Table, Button, Input } from "antd";
+import PaymentProofPopup from "./PaymentProofPopup";
+import DownloadPopup from "./DownloadPopup";
+import { FolderViewOutlined } from '@ant-design/icons';
 
 
 const { TabPane } = Tabs;
+const { Search } = Input;
 
 const Orders = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [orders, setOrders] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [downloadPopupVisible, setDownloadPopupVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  const handleOpenPopup = (order) => {
-    setSelectedOrder(order);
-    setVisible(true);
-  };
-
-  const handleClosePopup = () => {
-    setVisible(false);
-  };
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     loadData();
   }, []);
 
+  // const loadData = () => {
+  //   getOrdersAdmin(user.token).then((res) => {
+  //     setOrders(res.data);
+  //   });
+  // };
+
   const loadData = () => {
     getOrdersAdmin(user.token).then((res) => {
-      setOrders(res.data);
+      const sortedOrders = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setOrders(sortedOrders);
     });
-  };
+  };  //แสดงรายการล่าสุด
 
   const handleChangeStatus = (orderId, orderstatus) => {
     updateStatusOrder(user.token, orderId, orderstatus).then((res) => {
@@ -53,91 +44,40 @@ const Orders = () => {
     });
   };
 
-  const orderCard = orders.map((item, index) => {
-    return (
-      <div key={item._id} className="card mb-3">
-        <div className="card-body">
-          <h5 className="card-title">
-            Order by <b>{item.orderdBy?.username}</b>
-          </h5>
-          <p className="card-text">Status: {item.orderstatus}</p>
-          <select
-            value={item.orderstatus}
-            onChange={(e) => handleChangeStatus(item._id, e.target.value)}
-            style={{ width: "200px", alignSelf: "center" }}
-            className={`form form-control ${
-              item.orderstatus === "Processing"
-                ? "bg-warning"
-                : item.orderstatus === "Cancelled"
-                ? "bg-danger text-light"
-                : item.orderstatus === "Completed"
-                ? "bg-success text-light"
-                : ""
-            }`}
-          >
-            <option value="Not Process">Not Process</option>
-            <option value="Processing" className="bg-warning text-dark">
-              Processing
-            </option>
-            <option value="Cancelled" className="bg-danger text-light">
-              Cancelled
-            </option>
-            <option value="Completed" className="bg-success text-light">
-              Completed
-            </option>
-          </select>
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {item.products.map((p, i) => (
-                <tr key={p.product._id}>
-                  <td>{p.product.title}</td>
-                  <td>{p.price}</td>
-                  <td>{p.count}</td>
-                </tr>
-              ))}
-              <tr>
-                <td colSpan={3}>
-                  Total Price: <b>{item.cartTotal}</b>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="mt-3">
-            <Button onClick={() => handleOpenPopup(item)}>View Invoice with Image</Button>
-          </div>
-          <div className="mt-3">
-            <PDFDownloadLink
-              document={<Invoice order={item} />}
-              fileName={`invoice_${item._id}.pdf`}
-            >
-              {({ loading }) =>
-                loading ? "Loading PDF..." : "Download Invoice"
-              }
-            </PDFDownloadLink>
-          </div>
-        </div>
-      </div>
-    );
-  });
+  const handleOpenPopup = (order) => {
+    setSelectedOrder(order);
+    setPopupVisible(true);
+  };
+
+  const handleClosePopup = () => {
+    setPopupVisible(false);
+  };
+
+  const handleOpenDownloadPopup = (order) => {
+    setSelectedOrder(order);
+    setDownloadPopupVisible(true);
+  };
+
+  const handleCloseDownloadPopup = () => {
+    setDownloadPopupVisible(false);
+  };
+
+  const filteredOrders = orders.filter((order) =>
+    order.orderNumber && order.orderNumber.includes(searchTerm)
+  );
 
   const columns = [
     {
       title: "ชื่อผู้ใช้",
-      dataIndex: "orderdBy",
-      render: (item, i) => <>{item?.username || "No user"}</>,
+      dataIndex: "orderdBy", // ตรวจสอบให้แน่ใจว่าตรงกับฟิลด์ในข้อมูลของคุณ
+      render: (item) => <>{item?.username || "No user"}</>,
     },
     {
       title: "รายการสินค้า",
-      render: (item, i) => (
+      dataIndex: "products", // ใช้ dataIndex สำหรับคอลัมน์นี้
+      render: (products) => (
         <ol>
-          {item.products.map((p, i) => (
+          {products.map((p) => (
             <li key={p.product._id}>
               {p.product.title}{" "}
               <b>
@@ -160,131 +100,42 @@ const Orders = () => {
     },
     {
       title: "หลักฐานการชำระเงิน",
-      render: (item) => (
-        <Button onClick={() => handleOpenPopup(item)}>View</Button>
+      render: (record) => (
+        <Button onClick={() => handleOpenPopup(record)}>View</Button>
       ),
     },
     {
       title: "ที่อยู่จัดส่ง",
-      render: (item) => (
-        <PDFDownloadLink
-          document={<Invoice order={item} />}
-          fileName={`invoice_${item._id}.pdf`}
-        >
-          {({ loading }) =>
-            loading ? "Loading PDF..." : "Download Address"
-          }
-        </PDFDownloadLink>
+      render: (record) => (
+        <Button onClick={() => handleOpenDownloadPopup(record)}>Download Invoice22222</Button>
       ),
     },
     {
       title: "อัพเดทสถานะ",
-      render: (item) => (
+      render: (record) => (
         <select
-          value={item.orderstatus}
-          onChange={(e) => handleChangeStatus(item._id, e.target.value)}
+          value={record.orderstatus}
+          onChange={(e) => handleChangeStatus(record._id, e.target.value)}
           style={{ width: "200px", alignSelf: "center" }}
           className={`form form-control ${
-            item.orderstatus === "Processing"
+            record.orderstatus === "Processing"
               ? "bg-warning"
-              : item.orderstatus === "Cancelled"
+              : record.orderstatus === "Cancelled"
               ? "bg-danger text-light"
-              : item.orderstatus === "Completed"
+              : record.orderstatus === "Completed"
               ? "bg-success text-light"
               : ""
           }`}
         >
           <option value="Not Process">Not Process</option>
-          <option value="Processing" className="bg-warning text-dark">
-            Processing
-          </option>
-          <option value="Cancelled" className="bg-danger text-light">
-            Cancelled
-          </option>
-          <option value="Completed" className="bg-success text-light">
-            Completed
-          </option>
+          <option value="Processing">Processing</option>
+          <option value="Cancelled">Cancelled</option>
+          <option value="Completed">Completed</option>
         </select>
       ),
     },
   ];
-
-  const tableBoot = (
-    <table className="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th scope="col">ชื่อผู้ใช้</th>
-          <th scope="col">รายการสินค้า</th>
-          <th scope="col">ราคารวมสุทธิ</th>
-          <th scope="col">สถานะ</th>
-          <th scope="col">หลักฐานการชำระเงิน</th>
-          <th scope="col">ที่อยู่จัดส่ง</th>
-          <th scope="col">อัพเดทสถานะ</th>
-        </tr>
-      </thead>
-      <tbody>
-        {orders.map((item, i) => (
-          <tr key={item._id}>
-            <th scope="row">{item.orderdBy?.username}</th>
-            <td>
-              <ol>
-                {item.products.map((p, i) => (
-                  <li key={p.product._id}>
-                    {p.product.title}{" "}
-                    <b>
-                      {p.price}x{p.count}
-                    </b>
-                  </li>
-                ))}
-              </ol>
-            </td>
-            <td>{item.cartTotal}</td>
-            <td>{item.orderstatus}</td>
-            <td>
-              <Button onClick={() => handleOpenPopup(item)}>View</Button>
-            </td>
-            <td>
-              <PDFDownloadLink
-                document={<Invoice order={item} />}
-                fileName={`invoice_${item._id}.pdf`}
-              >
-                {({ loading }) =>
-                  loading ? "Loading PDF..." : "Download Address"
-                }
-              </PDFDownloadLink>
-            </td>
-            <td>
-              <select
-                value={item.orderstatus}
-                onChange={(e) => handleChangeStatus(item._id, e.target.value)}
-                style={{ width: "200px", alignSelf: "center" }}
-                className={`form form-control ${
-                  item.orderstatus === "Processing"
-                    ? "bg-warning"
-                    : item.orderstatus === "Cancelled"
-                    ? "bg-danger text-light"
-                    : item.orderstatus === "Completed"
-                    ? "bg-success text-light"
-                    : ""
-                }`}
-              >
-                <option value="Not Process">Not Process</option>
-                <option value="Processing" className="bg-warning text-dark">
-                  Processing
-                </option>
-                <option value="Cancelled" className="bg-danger text-light">
-                  Cancelled
-                </option>
-                <option value="Completed" className="bg-success text-light">
-                  Completed
-                </option>
-              </select>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  
 
   return (
     <div className="container-fluid">
@@ -292,8 +143,17 @@ const Orders = () => {
         <div className="col-md-2">
           <MenubarAdmin />
         </div>
-
-        <div className="col text-center">
+        <div className="col">
+          <h4 className="text-center mt-3">คำสั่งซื้อ</h4>
+          <div className="mb-3">
+            <Search
+              placeholder="ค้นหา Order Number..."
+              allowClear
+              enterButton="Search"
+              size="large"
+              onSearch={(value) => setSearchTerm(value)}
+            />
+          </div>
           <Tabs defaultActiveKey="1">
             <TabPane
               tab={
@@ -303,10 +163,71 @@ const Orders = () => {
               }
               key="1"
             >
-              Order Card
-              {orderCard}
+              {filteredOrders.map((item) => (
+                <div key={item._id} className="card mb-3">
+                  <div className="card-body">
+                    <h5 className="card-title">
+                      Order by <b>{item.orderdBy?.username}</b>
+                    </h5>
+                    <p className="card-text">Status: {item.orderstatus}</p>
+                    <select
+                      value={item.orderstatus}
+                      onChange={(e) => handleChangeStatus(item._id, e.target.value)}
+                      style={{ width: "200px", alignSelf: "center" }}
+                      className={`form form-control ${
+                        item.orderstatus === "Processing"
+                          ? "bg-warning"
+                          : item.orderstatus === "Cancelled"
+                          ? "bg-danger text-light"
+                          : item.orderstatus === "Completed"
+                          ? "bg-success text-light"
+                          : ""
+                      }`}
+                    >
+                      <option value="Not Process">Not Process</option>
+                      <option value="Processing" className="bg-warning text-dark">
+                        Processing
+                      </option>
+                      <option value="Cancelled" className="bg-danger text-light">
+                        Cancelled
+                      </option>
+                      <option value="Completed" className="bg-success text-light">
+                        Completed
+                      </option>
+                    </select>
+                    <table className="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Price</th>
+                          <th>Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {item.products.map((p) => (
+                          <tr key={p.product._id}>
+                            <td>{p.product.title}</td>
+                            <td>{p.price}</td>
+                            <td>{p.count}</td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td colSpan={3}>
+                            Total Price: <b>{item.cartTotal}</b>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div className="mt-3">
+                      <Button onClick={() => handleOpenPopup(item)}>View Payment Proof</Button>
+                    </div>
+                    <div className="mt-3">
+                      <Button onClick={() => handleOpenDownloadPopup(item)}>Download Invoice222</Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </TabPane>
-
             <TabPane
               tab={
                 <span>
@@ -315,10 +236,8 @@ const Orders = () => {
               }
               key="2"
             >
-              Table Ant Design
-              <Table dataSource={orders} columns={columns} />
+              <Table dataSource={filteredOrders} columns={columns} />
             </TabPane>
-
             <TabPane
               tab={
                 <span>
@@ -327,14 +246,25 @@ const Orders = () => {
               }
               key="3"
             >
-              Table Bootstrap
-              {tableBoot}
+              {/* Alternate view of the table if needed */}
             </TabPane>
           </Tabs>
         </div>
       </div>
-
-      <Popup visible={visible} onClose={handleClosePopup} order={selectedOrder} />
+      {popupVisible && selectedOrder && (
+        <PaymentProofPopup
+          visible={popupVisible}
+          onClose={handleClosePopup}
+          order={selectedOrder}
+        />
+      )}
+      {downloadPopupVisible && selectedOrder && (
+        <DownloadPopup
+          visible={downloadPopupVisible}
+          onClose={handleCloseDownloadPopup}
+          order={selectedOrder}
+        />
+      )}
     </div>
   );
 };

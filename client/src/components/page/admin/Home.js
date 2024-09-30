@@ -49,20 +49,22 @@ const Home = () => {
         <div className="col-md-2">
           <MenubarAdmin />
         </div>
-        <div className="col">
+        <div className="col-md-9 d-flex flex-column justify-content-start align-items-center align-self-start mt-5">
           {loading ? (
             <h1>Loading....</h1>
           ) : (
             <>
               <ReactTypingEffect
-                text={['ADMIN 360healthyshop']}
-                speed={100}
+                text={['ADMIN 360 HEALTHYSHOP']}
+                speed={150}
                 eraseDelay={100}
+                typingDelay={500}
                 className="typingeffect" // ใส่ className สำหรับ ReactTypingEffect
+                style={{ color: "#FF1493" }}
               />
-              <div className="row">
+              <div className="row pb-5">
                 {product.map((item) => (
-                  <div key={item._id} className="col-md-2 pb-4 mt-100px">
+                  <div key={item._id} className="col-6 col-md-3 mb-3">
                     <AdminProductCard handleRemove={handleRemove} product={item} />
                   </div>
                 ))}

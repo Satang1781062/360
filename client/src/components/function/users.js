@@ -39,12 +39,16 @@ export const changeRole = async (authtoken, value) => {
   };
 
   export const userCart = async (authtoken, cart) => {
-    return await axios.post(process.env.REACT_APP_API + "/user/cart", { cart }, {
+    const updatedCart = cart.map(item => ({
+      ...item,
+      price: item.discountedPrice || item.price
+    }));
+    return await axios.post(process.env.REACT_APP_API + "/user/cart", { cart: updatedCart }, {
       headers: {
         authtoken,
       },
     });
-  };
+  }
   
   
   export const getUserCart = async (authtoken) => {
@@ -75,11 +79,18 @@ export const changeRole = async (authtoken, value) => {
 
 
   export const saveOrder = async (authtoken, images) => {
-    return await axios.post(process.env.REACT_APP_API + "/user/order", { images }, {
-      headers: {
-        authtoken,
-      },
-    });
+    try {
+      const response = await axios.post(process.env.REACT_APP_API + "/user/order", { images }, {
+        headers: {
+          authtoken,
+        },
+      });
+      console.log('Order saved:', response.data);
+      return response; // <- เพิ่มการ return response
+    } catch (error) {
+      console.error('Error saving order:', error);
+      throw error; // <- เพิ่มการ throw error เพื่อให้สามารถจับข้อผิดพลาดได้ในที่อื่น
+    }
   };
   export const getOrders = async (authtoken) => {
     return await axios.get(process.env.REACT_APP_API + "/user/orders", {
